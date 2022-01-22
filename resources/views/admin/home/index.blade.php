@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <h3 class="mb-3">Highest Demand Products</h3>
+                    <h3 class="mb-3">Most Demanded Products</h3>
                     <div class="card p-3">
                         <div class="table-responsive" style="overflow-y: hidden">
                             <table class="table table-striped">

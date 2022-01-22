@@ -19,5 +19,14 @@ class Product extends Model
     public function productOrders(){
         return $this->hasMany(ProductOrder::class);
     }
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+    public function favourites(){
+        return $this->hasMany(FavList::class);
+    }
 }
 

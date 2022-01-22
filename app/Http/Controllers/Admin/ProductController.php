@@ -25,7 +25,7 @@ class ProductController extends Controller
         return view('admin.product.index',compact('products','orderCount'));
     }
 
-    /**
+/*
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -57,7 +57,7 @@ class ProductController extends Controller
         Storage::disk('image')->put($imageName,file_get_contents($image));
         Product::create([
         'name'=>$request->name,
-        'slug'=>Str::slug($request->name),
+        'slug'=>Str::slug(uniqid().$request->name),
         'price'=>$request->price,
         'image'=>$imageName,
         'description'=>$request->description,
@@ -117,7 +117,7 @@ class ProductController extends Controller
         }
         $product->update([
         'name'=>$request->name,
-        'slug'=>Str::slug($request->name),
+        'slug'=>Str::slug(uniqid().$request->name),
         'price'=>$request->price,
         'image'=>$imageName,
         'description'=>$request->description,

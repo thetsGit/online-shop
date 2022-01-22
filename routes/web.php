@@ -15,15 +15,34 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-Route::get('/', function () {
-    return Product::all();
+Route::get('/', "PageController@index");
+
+// user authentication
+Route::get("/signin","PageController@signinShow");
+Route::post("/signin","PageController@signinStore");
+Route::get("/register","PageController@registerShow");
+Route::post("/register","PageController@registerStore");
+Route::get("/signout","PageController@signout");
+
+// products searching routes
+Route::get("/products","ProductController@index");
+Route::get("/products/ageGroup/{slug}","ProductController@ageGroupShow");
+Route::get("/products/category/{slug}","ProductController@categoryShow");
+
+//restricted user routes
+Route::group(["middleware"=>"userAuth"],function(){
+    Route::get("/products/{slug}","PageController@productDetail");//product details
+    Route::post("/toggleLike","DataController@toggleLike");//like remove or add
+    Route::post("/toggleFavourite","DataController@toggleFavourite");//favourite remove or add
+    Route::post("/createComment","CommentController@create");//create comment
 });
 
+
+// ____________________________________admin___________________________________________
 // admin authentication
 Route::get("/admin/login","Admin\PageController@loginShow");
 Route::post("/admin/login","Admin\PageController@loginCheck");
 Route::get("/admin/logout","Admin\PageController@logout");
-
 
 // dashboard routes
 Route::group(['middleware'=>"adminAuth",'prefix'=>'admin','namespace'=>'Admin','as'=>'admin.'],function(){

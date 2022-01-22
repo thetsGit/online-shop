@@ -4,7 +4,7 @@
 <div class="card px-3 py-4" id="main-content">
     @if (session('success'))
     <div class="alert alert-info">
-        {{session('success')}}
+        <i class="fas fa-check-square me-1"></i>{{session('success')}}
     </div>
 @endif
 @if (count($pendingOrders) === 0)

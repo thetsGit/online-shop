@@ -12,6 +12,7 @@ class OrderController extends Controller
        $pendingOrders = ProductOrder::where('status','pending')->latest('updated_at')->with('user','product')->paginate(5);
        return view('admin.order.pending',compact('pendingOrders'));
    }
+
    public function complete(Request $request){
     $orderCount = ProductOrder::where('status','pending')->count();
     if(isset($request->start_date)){
@@ -22,6 +23,7 @@ class OrderController extends Controller
 
     return view('admin.order.complete',compact('completeOrders','orderCount'));
 }
+
    public function makeComplete(ProductOrder $order){
     //    return $order;
        $order->update([

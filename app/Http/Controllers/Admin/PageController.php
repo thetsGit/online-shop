@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class PageController extends Controller
 {
     public function index(){
-        return redirect('/admin/orders');
+        return redirect('/admin');
     }
     public function loginShow(){
        return view("admin.auth.login");

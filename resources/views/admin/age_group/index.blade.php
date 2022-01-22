@@ -10,7 +10,7 @@ id="main-content">
 
      @if (session('success'))
          <div class="alert alert-info">
-             {{session('success')}}
+            <i class="fas fa-check-square me-1"></i>{{session('success')}}
          </div>
      @endif
     <div class="table-responsive" style="overflow-y: hidden">
