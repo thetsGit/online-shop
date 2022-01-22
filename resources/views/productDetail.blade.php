@@ -115,25 +115,59 @@
                     id= "comment-section"
                   >
                     @foreach ($product->comments as $comment)
-                    <div class="d-flex align-items-start mb-3">
-                        <img
-                          src="{{asset("image/".$comment->user->image)}}"
-                          class="cmt-profile rounded-circle"
-                          alt="{{$comment->user->image}}"
-                        />
-                        <div
-                          class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
-                          style="background-color: azure"
-                        >
-                          <div class="title d-flex justify-content-between align-items-center">
-                            <span class="fs-6 fw-bold">{{$comment->user->name}}</span>
-                            <span class="fw-lighter ms-2"
-                              ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
-                            >
-                          </div>
-                          <div>{{$comment->comment}}</div>
+                    @if ($comment->user->id === auth()->user()->id)
+                    <div class="d-flex mb-3 comment-super-wrap">
+                        <div class="d-flex align-items-start">
+                            <img
+                            src="{{asset("image/".$comment->user->image)}}"
+                            class="cmt-profile rounded-circle"
+                            alt="{{$comment->user->image}}"
+                            />
+                            <div class="rounded-3 position-relative flex-grow-1 p-0 ms-2 overflow-hidden comment-wrap">
+                                <div class="position-absolute w-100 h-100 p3 delete-btn-wrap" style="background-color: #0003">
+                                    <span class="d-inline-block ms-auto my-2 me-2 d-flex justify-content-center align-items-center shadow-3 rounded-circle bg-white text-black delete-cmt-btn" style="width: 2rem;height: 2rem;" data-comment-id="{{$comment->id}}">
+                                        <i style="pointer-events: none" class="fas fa-times"></i>
+                                    </span>
+                                </div>
+                                <div
+                                class="flex-grow-1 p-2 rounded-3 text-black"
+                                style="background-color: lightyellow"
+                                >
+                                    <div class="title d-flex justify-content-between align-items-center">
+                                        <span class="fs-6 fw-bold">You &middot; <span class="text-black-50" style="font-size: .8rem">{{$comment->user->name}}</span></span>
+                                        <span class="fw-lighter ms-2"
+                                        ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
+                                        >
+                                    </div>
+                                    <div>{{$comment->comment}}</div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                    </div>
+                    @else
+                    <div class="d-flex">
+                        <div class="d-flex align-items-start mb-3">
+                            <img
+                            src="{{asset("image/".$comment->user->image)}}"
+                            class="cmt-profile rounded-circle"
+                            alt="{{$comment->user->image}}"
+                            />
+                            <div
+                            class="flex-grow-1 p-2 rounded-3 text-black ms-2"
+                            style="background-color: azure"
+                            >
+                            <div class="title d-flex justify-content-between align-items-center">
+                                <span class="fs-6 fw-bold">{{$comment->user->name}}</span>
+                                <span class="fw-lighter ms-2"
+                                ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
+                                >
+                            </div>
+                            <div>{{$comment->comment}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     @endforeach
                     {{-- view more --}}
                     {{-- <div class="d-flex align-items-start mb-3">
@@ -145,7 +179,7 @@
                     <div class="d-flex align-items-start">
                       <img
                         src="{{asset("image/".auth()->user()->image)}}"
-                        class="cmt-profile-me rounded-circle"
+                        class="cmt-profile-me rounded-circle shadow-4"
                         alt=""
                       />
                       <div
@@ -179,51 +213,115 @@ $(()=>{
 const newComment = document.getElementById("new-comment");
 const commentBtn = document.getElementById("comment-btn");
 const commentSection = document.getElementById("comment-section");
-const formData = new FormData();
-    commentBtn.addEventListener("click",async()=>{
-    formData.append("newComment",newComment.value);
-    formData.append("user",{{auth()->user()->id}});
-    formData.append("product",{{$product->id}});
-    const res = await axios.post("{{url("/createComment")}}",formData);
+const deleteBtns = document.getElementsByClassName("delete-cmt-btn");
+Array.prototype.forEach.call(deleteBtns,(deleteBtn)=>{
+    deleteBtn.addEventListener("click",async(e)=>{
+    let formData = new FormData();
+    formData.append("commentId",e.target.dataset.commentId);
+    const res = await axios.post("{{url("/removeComment")}}",formData);
     if(res.data.error){
         new Noty({
-        type: "error",
+        type: "warning",
         layout: "centerRight",
         text     : res.data.error,
+        timeout: 3000,
+        killer: true,
         }).show();
-    }
-    else if(res.data.success){
-        const createdComment = res.data.success;
-        const comment = document.createElement("div");
-        comment.classList = "d-flex align-items-start mb-3";
-           comment.innerHTML = `
-            <img
-            src="{{asset("image/".auth()->user()->image)}}"
-            class="cmt-profile rounded-circle"
-            alt="{{auth()->user()->image}}"
-            />
-            <div
-            class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
-            style="background-color: azure"
-            >
-            <div class="title d-flex justify-content-between align-items-center">
-            <span class="fs-6 fw-bold">{{auth()->user()->name}}</span>
-            <span class="fw-lighter ms-2"
-            ><small><i class="text-black-50">{{now()->diffForHumans()}}</i></small></span
-            >
-            </div>
-            <div>${createdComment.comment}</div>
-            </div>
-            `;
-        commentSection.prepend(comment);
-        newComment.value = "";
-        new Noty({
-        type: "success",
+    }else{
+     $(e.target).parents(".comment-super-wrap").remove();
+     new Noty({
+        type: "info",
         layout: "centerRight",
-        text     : "comment successfully created",
+        text     : "comment removed",
+        timeout: 3000,
+        killer: true,
         }).show();
-        comment.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
     }
+});
+});
+
+// const deleteCommentHandler = (cmdId)=>{
+//     console.log("hello");
+// }
+commentBtn.addEventListener("click",async()=>{
+let formData = new FormData();
+formData.append("newComment",newComment.value);
+formData.append("user",{{auth()->user()->id}});
+formData.append("product",{{$product->id}});
+const res = await axios.post("{{url("/createComment")}}",formData);
+console.log(res.data);
+if(res.data.error){
+    new Noty({
+    type: "error",
+    layout: "centerRight",
+    text     : res.data.error,
+    }).show();
+}
+else if(res.data.success){
+    const createdComment = res.data.success;
+    const comment = document.createElement("div");
+    comment.classList = "d-flex mb-3 comment-super-wrap";
+    comment.innerHTML = `
+                <div class="d-flex align-items-start">
+                    <img
+                    src="{{asset("image/".auth()->user()->image)}}"
+                    class="cmt-profile rounded-circle"
+                    alt="{{auth()->user()->image}}"
+                    />
+                    <div class="rounded-3 position-relative flex-grow-1 p-0 ms-2 overflow-hidden comment-wrap">
+                        <div class="position-absolute w-100 h-100 p3 delete-btn-wrap" style="background-color: #0003">
+                            <span class="d-inline-block ms-auto my-2 me-2 d-flex justify-content-center align-items-center shadow-3 rounded-circle bg-white text-black delete-cmt-btn" data-comment-id=${createdComment.id} style="width: 2rem;height: 2rem;">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                        <div
+                        class="flex-grow-1 p-2 rounded-3 text-black"
+                        style="background-color: lightyellow"
+                        >
+                            <div class="title d-flex justify-content-between align-items-center">
+                                <span class="fs-6 fw-bold">You &middot; <span class="text-black-50" style="font-size: .8rem">{{auth()->user()->name}}</span></span>
+                                <span class="fw-lighter ms-2"
+                                ><i><small class="text-black-50">{{now()->diffForHumans()}}</small></i></span
+                                >
+                            </div>
+                            <div>${createdComment.comment}</div>
+                        </div>
+                    </div>
+                </div>`;
+commentSection.prepend(comment);
+document.querySelector(".delete-cmt-btn").addEventListener("click",async(e)=>{
+    let formData = new FormData();
+    formData.append("commentId",createdComment.id);
+    const res = await axios.post("{{url("/removeComment")}}",formData);
+    if(res.data.error){
+        new Noty({
+        type: "warning",
+        layout: "centerRight",
+        text     : res.data.error,
+        timeout: 3000,
+        killer: true,
+        }).show();
+    }else{
+     $(e.target).parents(".comment-super-wrap").remove();
+     new Noty({
+        type: "info",
+        layout: "centerRight",
+        text     : "comment removed",
+        timeout: 3000,
+        killer: true,
+        }).show();
+    }
+});
+newComment.value = "";
+new Noty({
+type: "info",
+layout: "centerRight",
+text     : "comment created",
+timeout: 3000,
+killer: true,
+}).show();
+comment.scrollIntoView({behavior: "smooth",alignToTop: true});
+}
 });
 });
 

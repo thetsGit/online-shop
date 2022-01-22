@@ -126,6 +126,17 @@
         border: 0;
         background: none;
       }
+      .delete-cmt-btn:hover{
+        background-color: #EF8157!important;
+        cursor: pointer!important;
+        color: white!important;
+      }
+      .comment-wrap>.delete-btn-wrap{
+        display: none;
+      }
+      .comment-wrap:hover>.delete-btn-wrap{
+          display:block;
+      }
     </style>
   </head>
   <body>

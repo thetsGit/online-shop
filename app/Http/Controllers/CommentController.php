@@ -18,7 +18,7 @@ class CommentController extends Controller
        }
        $product = Product::find($request->product);
        $user = User::find($request->user);
-       if(!($product || $user)){
+       if(!$product || !$user || !($user->id === auth()->user()->id)){
         return response()->json([
             "error"=>"invalid user or product"
          ]);
@@ -30,11 +30,33 @@ class CommentController extends Controller
        }
        $newComment = Comment::create([
            "product_id"=>$product->id,
-           "user_id"=>$user->id,
+           "user_id"=>auth()->user()->id,
            "comment"=>$request->newComment
        ]);
        return response()->json([
            "success"=>$newComment
        ]);
+    }
+
+    public function remove(Request $request){
+        if(!$request->commentId){
+            return response()->json([
+                'error'=>"need comment id"
+            ]);
+        }
+        $comment = Comment::find($request->commentId);
+        if(!$comment){
+            return response()->json([
+                "error"=>"invalid comment id"
+            ]);
+
+        }
+        if($comment->user_id !== auth()->user()->id){
+            return "user ids don't match";
+        }
+        $comment->delete();
+        return response()->json([
+            "success"=>"comment deleted"
+        ]);
     }
 }

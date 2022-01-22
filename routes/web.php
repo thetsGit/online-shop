@@ -35,6 +35,7 @@ Route::group(["middleware"=>"userAuth"],function(){
     Route::post("/toggleLike","DataController@toggleLike");//like remove or add
     Route::post("/toggleFavourite","DataController@toggleFavourite");//favourite remove or add
     Route::post("/createComment","CommentController@create");//create comment
+    Route::post("/removeComment","CommentController@remove");//remove comment
 });
 
 
