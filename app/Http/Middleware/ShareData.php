@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
-class UserAuth
+class ShareData
 {
     /**
      * Handle an incoming request.
@@ -18,12 +18,15 @@ class UserAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->check()){
-            return redirect("/signin");
-         }
-        if(auth()->user()->role !== "user"){
-            return redirect("/signin");
+        if(auth()->check()){
+            $productsInCart = ProductCart::where("user_id",auth()->user()->id)->get();
+            $cart_count = 0;
+            foreach ($productsInCart as $product) {
+                $cart_count += $product->quantity;
+            }
+            View::share('cart_count',$cart_count);
         }
+
         return $next($request);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use App\Models\ProductCart;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -15,28 +16,36 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
-Route::get('/', "PageController@index");
 
-// user authentication
-Route::get("/signin","PageController@signinShow");
-Route::post("/signin","PageController@signinStore");
-Route::get("/register","PageController@registerShow");
-Route::post("/register","PageController@registerStore");
-Route::get("/signout","PageController@signout");
+// _____________________________________________user________________________________________________________
+Route::group(["middleware"=>"shareData"],function(){
+    Route::get('/', "PageController@index");
 
-// products searching routes
-Route::get("/products","ProductController@index");
-Route::get("/products/ageGroup/{slug}","ProductController@ageGroupShow");
-Route::get("/products/category/{slug}","ProductController@categoryShow");
+    // user authentication
+    Route::get("/signin","PageController@signinShow");
+    Route::post("/signin","PageController@signinStore");
+    Route::get("/register","PageController@registerShow");
+    Route::post("/register","PageController@registerStore");
+    Route::get("/signout","PageController@signout");
 
-//restricted user routes
-Route::group(["middleware"=>"userAuth"],function(){
-    Route::get("/products/{slug}","PageController@productDetail");//product details
-    Route::post("/toggleLike","DataController@toggleLike");//like remove or add
-    Route::post("/toggleFavourite","DataController@toggleFavourite");//favourite remove or add
-    Route::post("/createComment","CommentController@create");//create comment
-    Route::post("/removeComment","CommentController@remove");//remove comment
+    // products searching routes
+    Route::get("/products","ProductController@index");
+    Route::get("/products/ageGroup/{slug}","ProductController@ageGroupShow");
+    Route::get("/products/category/{slug}","ProductController@categoryShow");
+
+    //restricted user routes
+    Route::group(["middleware"=>"userAuth"],function(){
+        Route::get("/products/{slug}","PageController@productDetail");//product details
+        Route::post("/toggleLike","DataController@toggleLike");//like remove or add
+        Route::post("/toggleFavourite","DataController@toggleFavourite");//favourite remove or add
+        Route::post("/createComment","CommentController@create");//create comment
+        Route::post("/removeComment","CommentController@remove");//remove comment
+        Route::get("/cart","CartController@showAll");//view cart
+        Route::post("/cart/add","CartController@addOne");//add to cart
+        Route::post("/cart/remove","CartController@removeOne");//remove from cart
+    });
 });
+
 
 
 // ____________________________________admin___________________________________________

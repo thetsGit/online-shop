@@ -78,8 +78,14 @@
                 <div class="mb-3">
                   <span class="fs-2 fw-bold mb-4">{{$product->price}}<sup>mmk</sup></span>
                   <div>
-                    <button class="btn btn-primary">Add to cart</button>
-                    <button class="btn btn-outline-primary">see more</button>
+                    <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
+                        @csrf
+                        <input type="text" name="productId" value="{{$product->id}}" class="d-none" />
+                        <button type="submit" class="btn btn-danger fs-5">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </form>
+                    <a href="{{url("/#product-section")}}" class="btn btn-outline-danger">see more</a>
                   </div>
                 </div>
                 <div class="mb-2">
@@ -324,8 +330,18 @@ comment.scrollIntoView({behavior: "smooth",alignToTop: true});
 }
 });
 });
-
-
-
 </script>
+@endsection
+@section('cart-script')
+@if (session("error")||session("success"))
+<script>
+    new Noty({
+    type: "{{session("error")?"error":"info"}}",
+    layout: "centerRight",
+    text     : "{{session("error")?session("error"):session("success")}}",
+    timeout: 3000,
+    killer: true,
+    }).show();
+</script>
+@endif
 @endsection

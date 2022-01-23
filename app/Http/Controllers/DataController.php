@@ -16,13 +16,13 @@ class DataController extends Controller
         $isLiked = $like->first();
         if($isLiked){
                 $like->delete();
-                return redirect()->back()->withFragment("product-section");
+                return redirect()->back()->withFragment("product-section")->with("success","unliked");
         }
         Like::create([
             "user_id"=>$request->user,
             "product_id"=>$request->product
         ]);
-        return redirect()->back()->withFragment("product-section");
+        return redirect()->back()->withFragment("product-section")->with("success","liked");
     }
     public function toggleFavourite(Request $request){
         if(!($request->user || $request->product)){
@@ -32,12 +32,12 @@ class DataController extends Controller
         $isFavourited = $favourite->first();
         if($isFavourited){
              $favourite->delete();
-             return redirect()->back()->withFragment("product-section");
+             return redirect()->back()->withFragment("product-section")->with("success","removed from your favourites");
         }
         FavList::create([
              "user_id"=>$request->user,
              "product_id"=>$request->product
          ]);
-         return redirect()->back()->withFragment("product-section");
+         return redirect()->back()->withFragment("product-section")->with("success","added to favourites");
      }
 }

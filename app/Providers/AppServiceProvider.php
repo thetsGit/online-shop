@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\AgeGroup;
 use App\Models\Category;
+use App\Models\ProductCart;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;

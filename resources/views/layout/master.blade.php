@@ -187,23 +187,25 @@
               ></a>
             </li>
             @auth
-            <li class="nav-item">
-                <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
-                  >Favourites<span></span
-                ></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
-                  >Cart<span></span
-                  ><span class="badge rounded-pill bg-primary"> 99+ </span></a
-                >
-              </li>
-            <li class="nav-item">
-              <a href="{{url("/profile")}}" class="nav-link nav-link-me">Profile<span></span></a>
-            </li>
-            <li class="nav-item">
-                <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
-            </li>
+            @if (auth()->check())
+                <li class="nav-item">
+                    <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
+                    >Favourites<span></span
+                    ></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
+                    >Cart<span></span
+                    ><span class="badge rounded-pill bg-primary">{{$cart_count}}</span></a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a href="{{url("/profile")}}" class="nav-link nav-link-me">Profile<span></span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
+                </li>
+            @endif
             @endauth
             @guest
             <li class="nav-item">
@@ -433,5 +435,6 @@
       });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @yield('cart-script')
   </body>
 </html>

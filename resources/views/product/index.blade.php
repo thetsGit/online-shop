@@ -123,9 +123,13 @@
                           >
                         </div>
                         @auth
-                        <button class="btn btn-info btn-block m-0">
-                          Add to cart
-                        </button>
+                        <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
+                            @csrf
+                            <input type="text" name="productId" value="{{$product->id}}" class="d-none" />
+                            <button type="submit" class="btn btn-info btn-block m-0">
+                                Add to cart
+                            </button>
+                        </form>
                         @endauth
                         @guest
                         <button class="btn btn-info btn-block m-0" disabled>
@@ -155,4 +159,17 @@
       </div>
     </div>
   </div>
+@endsection
+@section('cart-script')
+@if (session("error")||session("success"))
+<script>
+    new Noty({
+    type: "{{session("error")?"error":"info"}}",
+    layout: "centerRight",
+    text     : "{{session("error")?session("error"):session("success")}}",
+    timeout: 3000,
+    killer: true,
+    }).show();
+</script>
+@endif
 @endsection
