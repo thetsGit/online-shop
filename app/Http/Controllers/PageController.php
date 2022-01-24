@@ -6,6 +6,7 @@ use App\Models\AgeGroup;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductCart;
+use App\Models\ProductOrder;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,5 +73,28 @@ class PageController extends Controller
        ]);
        $product = Product::where("slug",$slug)->with("category","ageGroup","favourites")->with(["comments"=>function($q){$q->with("user")->latest()->get();}])->withCount("likes")->first();
        return view("productDetail",compact("product"));
+    }
+
+    public function profile(){
+        $user = User::where("id",auth()->user()->id)->withCount("likes")->withCount("comments")->withCount("favourites")->first();
+        $pending = ProductOrder::where("user_id",auth()->user()->id)->where("status","pending")->with("product");
+        $pendingOrders = $pending->get();
+        $pendingOrderCount = $pending->count();
+        $completed = ProductOrder::where("user_id",auth()->user()->id)->where("status","complete")->with("product");
+        $completedOrderCount = $completed->count();
+        $completedOrders = $completed->paginate(5);
+        return view("profile",compact("user","pendingOrders","pendingOrderCount","completedOrders","completedOrderCount"));
+    }
+
+    public function uploadProfileImage(Request $request){
+        $imageName = uniqid().$request->image->getClientOriginalName();
+        $user = User::find(auth()->user()->id);
+        Storage::disk("image")->put($imageName,file_get_contents($request->image));
+        Storage::disk("image")->delete($user->image);
+        $user->update([
+            "image"=>$imageName
+        ]);
+
+      return asset("/image")."/".$imageName;
     }
 }

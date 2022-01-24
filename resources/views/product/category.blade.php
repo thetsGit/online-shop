@@ -62,7 +62,7 @@
                           <span class="badge bg-success"> {{$product->ageGroup->name}} </span>
                         </div>
 
-                        @if (auth()->user())
+                        @if (auth()->user() && auth()->user()->role === "user")
                             <?php
                             $isFavourite = false;
                             foreach ($product->favourites as $favourite) {
@@ -100,7 +100,7 @@
                           class="d-flex justify-content-between mb-2 align-items-center"
                         >
 
-                        @if (auth()->user())
+                        @if (auth()->user() && auth()->user()->role === "user")
                             <?php
                             $isLiked = false;
                             foreach ($product->likes as $like) {
@@ -132,6 +132,7 @@
                           >
                         </div>
                         @auth
+                        @if (auth()->user()->role === "user")
                         <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                             @csrf
                             <input type="text" name="productId" value="{{$product->id}}" class="d-none" />
@@ -139,6 +140,7 @@
                                 Add to cart
                             </button>
                         </form>
+                        @endif
                         @endauth
                         @guest
                         <button class="btn btn-info btn-block m-0" disabled>

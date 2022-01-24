@@ -187,7 +187,7 @@
               ></a>
             </li>
             @auth
-            @if (auth()->check())
+            @if (auth()->check() && auth()->user()->role === "user")
                 <li class="nav-item">
                     <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
                     >Favourites<span></span
@@ -232,9 +232,6 @@
         class="d-flex container justify-content-center align-items-start flex-column w-100 h-100"
       >
         <div class="row w-100" style="z-index: 3">
-            {{-- space --}}
-            {{-- <div class="col-12 col-md-6"></div> --}}
-             <!-- for hero content -->
             <div class="col-12 col-md-6 offset-md-3">
                 <div class="mb-5">
                     <!-- title -->
@@ -381,7 +378,6 @@
         </div>
       </div>
     </div>
-    <!-- feedback section -->
 
     <!-- footer section -->
     <div
@@ -394,9 +390,7 @@
         ><span>Thethan@2022</span></a
       >
     </div>
-    <!-- footer section -->
 
-    <!-- <div class="vh-100 bg-info"></div> -->
     <!-- script files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 

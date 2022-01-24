@@ -43,6 +43,9 @@ Route::group(["middleware"=>"shareData"],function(){
         Route::get("/cart","CartController@showAll");//view cart
         Route::post("/cart/add","CartController@addOne");//add to cart
         Route::post("/cart/remove","CartController@removeOne");//remove from cart
+        Route::get("/profile","PageController@profile");//view profile
+        Route::post("/uploadImage","PageController@UploadProfileImage");
+        Route::get("/makeOrder","OrderController@makeOrder");//make order
     });
 });
 

@@ -75,6 +75,7 @@
                                             <span class="badge bg-warning"> {{$filteredProduct->ageGroup->name}}  </span>
                                             </div>
                                             @auth
+                                            @if (auth()->user()->role === "user")
                                                 <?php
                                                 $isFavourite = false;
                                                 foreach ($filteredProduct->favourites as $favourite) {
@@ -97,6 +98,7 @@
                                                     </button>
                                                 </form>
                                             </div>
+                                            @endif
                                             @endauth
 
 
@@ -114,7 +116,7 @@
                                             >
 
 
-                                            @if (auth()->user())
+                                            @if (auth()->user() && auth()->user()->role === "user")
                                                 <?php
                                                 $isLiked = false;
                                                 foreach ($filteredProduct->likes as $like) {
@@ -145,6 +147,7 @@
                                             >
                                             </div>
                                             @auth
+                                            @if (auth()->user()->role === "user")
                                             <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                                                 @csrf
                                                 <input type="text" name="productId" value="{{$filteredProduct->id}}" class="d-none" />
@@ -152,6 +155,7 @@
                                                     Add to cart
                                                 </button>
                                             </form>
+                                            @endif
                                             @endauth
                                             @guest
                                             <button class="btn btn-info btn-block m-0" disabled>
@@ -172,7 +176,7 @@
                                             <span class="badge bg-info"> {{$filteredProducts[$i]->ageGroup->name}}  </span>
                                             </div>
 
-                                            @if (auth()->user())
+                                            @if (auth()->user() && auth()->user()->role === "user")
                                                 <?php
                                                 $isFavourite = false;
                                                 foreach ($filteredProducts[$i]->favourites as $favourite) {
@@ -209,7 +213,7 @@
                                             class="d-flex justify-content-between mb-2 align-items-center"
                                             >
 
-                                            @if (auth()->user())
+                                            @if (auth()->user() && auth()->user()->role === "user")
                                                 <?php
                                                 $isLiked = false;
                                                 foreach ($filteredProducts[$i]->likes as $like) {
@@ -241,6 +245,7 @@
                                             >
                                             </div>
                                             @auth
+                                            @if (auth()->user()->role === "user")
                                             <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                                                 @csrf
                                                 <input type="text" name="productId" value="{{$filteredProducts[$i]->id}}" class="d-none" />
@@ -248,6 +253,7 @@
                                                     Add to cart
                                                 </button>
                                             </form>
+                                            @endif
                                             @endauth
                                             @guest
                                             <button class="btn btn-info btn-block m-0" disabled>

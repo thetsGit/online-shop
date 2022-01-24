@@ -1,4 +1,40 @@
 @extends('layout.master2')
+@section('nav-items')
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link nav-link-me" aria-current="page" href="{{url("/")}}"
+          >Home<span></span
+        ></a>
+    </li>
+    @auth
+    <li class="nav-item">
+        <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
+        >Favourites<span></span
+        ></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link nav-link-me position-relative active-link" href="{{url("/cart")}}"
+        >Cart<span></span
+        ><span class="badge rounded-pill bg-danger">{{$cart_count}}</span></a
+        >
+    </li>
+    <li class="nav-item">
+    <a href="{{url("/profile")}}" class="nav-link nav-link-me">Profile<span></span></a>
+    </li>
+    <li class="nav-item">
+    <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
+    </li>
+    @endauth
+    @guest
+    <li class="nav-item">
+        <a href="{{url("/signin")}}" class="nav-link nav-link-me">Signin<span></span></a>
+    </li>
+    <li class="nav-item">
+        <a href="{{url("/register")}}" class="nav-link nav-link-me">Register<span></span></a>
+    </li>
+    @endguest
+</ul>
+@endsection
 @section('content')
 <div
 class="container-fluid position-relative"
@@ -81,12 +117,17 @@ style="
         <div
           class="card p-4 d-flex flex-row justify-content-between align-items-center"
         >
-          <div class="fs-5">Total items</div>
-          <div class="fs-5 position-relative">
-            <span class="badge bg-danger fs-6">
-                {{$totalItems}}
-            </span>
-          </div>
+            <div class="fs-5 position-relative">
+                <div class="position-relative bg-0">
+                    <span class="badge bg-danger position-absolute border-light translate-middle rounded-pill start-100" style="font-size: .8rem;border-width: 3px;">
+                        {{$totalItems}}
+                    </span>
+                    <span>
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="fs-5">Total items</div>
         </div>
         <div class="card p-4">
           <div
@@ -98,8 +139,8 @@ style="
               ><span class="fw-bold fs-3">{{$totalPrice}}</span></span
             >
           </div>
-          <button class="btn btn-primary m-0 mb-2">Add More</button>
-          <button class="btn btn-outline-primary m-0">Make Order</button>
+          <a href="{{url("/#product-section")}}" class="btn btn-primary m-0 mb-2">Add More</a>
+          <a href="{{url("/makeOrder")}}"  class="btn btn-outline-primary m-0">Make Order</a>
         </div>
       </div>
     </aside>

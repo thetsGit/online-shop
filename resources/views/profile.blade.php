@@ -1,191 +1,330 @@
-@extends('layout.master')
+@extends('layout.master2')
+@section('nav-items')
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link nav-link-me" aria-current="page" href="{{url("/")}}"
+          >Home<span></span
+        ></a>
+    </li>
+    @auth
+    <li class="nav-item">
+        <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
+        >Favourites<span></span
+        ></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
+        >Cart<span></span
+        ><span class="badge rounded-pill bg-danger">{{$cart_count}}</span></a
+        >
+    </li>
+    <li class="nav-item">
+    <a href="{{url("/profile")}}" class="nav-link nav-link-me active-link">Profile<span></span></a>
+    </li>
+    <li class="nav-item">
+    <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
+    </li>
+    @endauth
+    @guest
+    <li class="nav-item">
+        <a href="{{url("/signin")}}" class="nav-link nav-link-me">Signin<span></span></a>
+    </li>
+    <li class="nav-item">
+        <a href="{{url("/register")}}" class="nav-link nav-link-me">Register<span></span></a>
+    </li>
+    @endguest
+</ul>
+@endsection
 @section('content')
     <!-- product detail section -->
     <div class="container-fluid py-5" style="background-color: azure">
         <div class="container py-5">
-          <div class="row">
-            <div class="col-12 col-md-4">
-              <div class="card p-5 position-sticky px-3" style="top: 6rem">
-                <div class="card-body">
-                  <img src="./menPorduct.jpg" alt="" class="img-fluid" />
-                </div>
-                <div
-                  class="card-footer d-flex justify-content-between align-items-center"
-                >
-                  <div class="fs-5 text-danger">
-                    <i class="far fa-heart action-icon"></i>
-                    <small class="ms-1">34</small>
+          <div class="card p-5">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 col-md-4">
+                  <div class="mb-3 position-relative" id="image-container" style="height: auto;">
+                      <img src="{{asset("/image/".$user->image)}}" id="user-image" alt="{{$user->image}}" style="width: 100%;height: auto" />
+                      <div id="image-upload-btn">
+                         <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner-border text-danger d-none" role="status" id="spinner">
+                                <span class="visually-hidden">Loading...</span>
+                              </div>
+                             <label for="image-upload-input" id="image-upload-input-wrap">
+                                 <input id="image-upload-input" type="file" name="image" class="d-none" />
+                                 <div class="d-flex justify-content-center align-items-center bg-white text-black rounded-circle" id="upload-icon" style="width: 2.5rem;height: 2.5rem;">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                             </label>
+                         </div>
+                      </div>
                   </div>
-                  <div class="fs-5 text-warning">
-                    <i class="far fa-star action-icon"></i>
-                    <small class="ms-1">Add to favourites</small>
+                  <hr />
+                  <div class="d-flex justify-content-between align-items-start">
+                    <span class="fs-3 fw-bold">{{$user->name}}</span>
                   </div>
+                  <div class="fs-6 mb-3">{{$user->email}}</div>
                 </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-8">
-              <div class="card p-5">
-                <div class="mb-4">
-                  <h3 class="fs-1 fw-bold mb-2">Nike's Long Sleeve Shirt</h3>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Cupiditate esse tenetur repellat. Laborum, enim commodi
-                    quibusdam inventore repellendus eligendi sed vero odio fuga
-                    sequi, officiis amet asperiores libero dicta. Modi.
-                  </p>
-                </div>
-                <div class="mb-3">
-                  <span class="fs-2 fw-bold mb-4">15000<sup>mmk</sup></span>
-                  <div>
-                    <button class="btn btn-primary">Add to cart</button>
-                    <button class="btn btn-outline-primary">see more</button>
-                  </div>
-                </div>
-                <div class="mb-2">
-                  <i class="fas fa-check me-2"></i>
-                  <span class="fs-6">Category: </span>
-                  <span class="fs-6 fw-bold">Shrit </span>
-                </div>
-                <div class="mb-2">
-                  <i class="fas fa-check me-2"></i>
-                  <span class="fs-6">AgeGroup: </span>
-                  <span class="fs-6 fw-bold">Man </span>
-                </div>
-                <div class="mb-2">
-                  <i class="fas fa-check me-2"></i>
-                  <span class="fs-6">Views: </span>
-                  <span class="fs-6 fw-bold">69 </span>
-                </div>
-                <div class="mb-5">
-                  <i class="fas fa-check me-2"></i>
-                  <span class="fs-6">Likes: </span>
-                  <span class="fs-6 fw-bold">60 </span>
-                </div>
-                <ul class="list-group-flush mx-0 px-0">
-                  <li
-                    class="list-group-item active bg-primary"
-                    style="border-color: #2ba9cd !important"
-                  >
-                    Comments
-                  </li>
-                  <li
-                    class="list-group-item p-3"
-                    style="max-height: 20rem; overflow-y: auto"
-                  >
-                    <div class="d-flex align-items-start mb-3">
-                      <img
-                        src="./menPorduct.jpg"
-                        class="cmt-profile rounded-circle"
-                        alt=""
-                      />
-                      <div
-                        class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
-                        style="background-color: azure"
-                      >
-                        <div class="title d-flex">
-                          <span class="fs-5 fw-bold">Thethan</span>
-                          <span class="fw-lighter ms-2"
-                            ><small>3 days ago</small></span
-                          >
-                        </div>
-                        <div>Lorem ipsum dolor</div>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                      <img
-                        src="./menPorduct.jpg"
-                        class="cmt-profile rounded-circle"
-                        alt=""
-                      />
-                      <div
-                        class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
-                        style="background-color: azure"
-                      >
-                        <div class="title d-flex">
-                          <span class="fs-5 fw-bold">Thethan</span>
-                          <span class="fw-lighter ms-2"
-                            ><small>3 days ago</small></span
-                          >
-                        </div>
-                        <div>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                          Quia voluptatibus culpa itaque voluptatem!
-                        </div>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                      <img
-                        src="./menPorduct.jpg"
-                        class="cmt-profile rounded-circle"
-                        alt=""
-                      />
-                      <div
-                        class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
-                        style="background-color: azure"
-                      >
-                        <div class="title d-flex">
-                          <span class="fs-5 fw-bold">Thethan</span>
-                          <span class="fw-lighter ms-2"
-                            ><small>3 days ago</small></span
-                          >
-                        </div>
-                        <div>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                          Quia voluptatibus culpa itaque voluptatem!
-                        </div>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                      <img
-                        src="./menPorduct.jpg"
-                        class="cmt-profile rounded-circle"
-                        alt=""
-                      />
-                      <div
-                        class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
-                        style="background-color: azure"
-                      >
-                        <div class="title d-flex">
-                          <span class="fs-5 fw-bold">Thethan</span>
-                          <span class="fw-lighter ms-2"
-                            ><small>3 days ago</small></span
-                          >
-                        </div>
-                        <div>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                          Quia voluptatibus culpa itaque voluptatem!
-                        </div>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                      <a href="#" class="btn btn-link m-0">view more</a>
-                    </div>
-                  </li>
 
-                  <li class="list-group-item">
-                    <div class="d-flex align-items-start">
-                      <img
-                        src="./menPorduct.jpg"
-                        class="cmt-profile-me rounded-circle"
-                        alt=""
-                      />
+                <!-- statistics section -->
+                <div class="col-12 col-md-8">
+                  <div class="d-flex justify-content-between">
+                    <div class="fs-5 text-black-50 mb-3">Statistics</div>
+                    <div class="fs-6 text-primary"><i>joined {{$user->created_at->diffForHumans()}}</i></div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-12 col-md-4 col-sm-6">
                       <div
-                        class="flex-grow-1 p-2 rounded-3 text-black shadow-4 ms-2"
+                        class="card p-3 d-flex justify-content-between align-items-center flex-row"
                       >
-                        <input
-                          type="text"
-                          class="form-control p-3"
-                          placeholder="write some comment..."
-                        />
-                        <button class="btn btn-primary btn-sm">Comment</button>
+                        <div>
+                          <div class="mb-2">Pending Orders</div>
+                          <div class="fw-bold fs-5">{{$pendingOrderCount}}</div>
+                        </div>
+                        <div
+                          class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center"
+                          style="width: 3rem; height: 3rem"
+                        >
+                          <i class="fas fa-cubes"></i>
+                        </div>
                       </div>
                     </div>
-                  </li>
-                </ul>
+                    <div class="col-12 col-md-4 col-sm-6">
+                      <div
+                        class="card p-3 d-flex justify-content-between align-items-center flex-row"
+                      >
+                        <div>
+                          <div class="mb-2">Complete Orders</div>
+                          <div class="fw-bold fs-5">{{$completedOrderCount}}</div>
+                        </div>
+                        <div
+                          class="rounded-circle bg-success text-white d-flex justify-content-center align-items-center"
+                          style="width: 3rem; height: 3rem"
+                        >
+                          <i class="fas fa-cubes"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6">
+                      <div
+                        class="card p-3 d-flex justify-content-between align-items-center flex-row"
+                      >
+                        <div>
+                          <div class="mb-2">Favourites</div>
+                          <div class="fw-bold fs-5">{{$user->favourites_count}}</div>
+                        </div>
+                        <div
+                          class="rounded-circle bg-warning text-white d-flex justify-content-center align-items-center"
+                          style="width: 3rem; height: 3rem"
+                        >
+                          <i class="fas fa-star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6">
+                      <div
+                        class="card p-3 d-flex justify-content-between align-items-center flex-row"
+                      >
+                        <div>
+                          <div class="mb-2">Liked</div>
+                          <div class="fw-bold fs-5">{{$user->likes_count}}</div>
+                        </div>
+                        <div
+                          class="rounded-circle bg-danger text-white d-flex justify-content-center align-items-center"
+                          style="width: 3rem; height: 3rem"
+                        >
+                          <i class="fas fa-heart"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6">
+                      <div
+                        class="card p-3 d-flex justify-content-between align-items-center flex-row"
+                      >
+                        <div>
+                          <div class="mb-2">Commented</div>
+                          <div class="fw-bold fs-5">{{$user->comments_count}}</div>
+                        </div>
+                        <div
+                          class="rounded-circle bg-info d-flex text-white justify-content-center align-items-center"
+                          style="width: 3rem; height: 3rem"
+                        >
+                          <i class="fas fa-comment"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- orders list section -->
+                  <div class="d-flex justify-content-between">
+                    <div class="fs-5 text-black-50 mb-3">Order history</div>
+                  </div>
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <a
+                        class="nav-link active order-section"
+                        id="home-tab"
+                        data-toggle="tab"
+                        href="#pending"
+                        >Pending</a
+                      >
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <a
+                        class="nav-link order-section"
+                        id="profile-tab"
+                        data-toggle="tab"
+                        href="#completed"
+                        >Completed</a
+                      >
+                    </li>
+                  </ul>
+
+                  <div class="tab-content my-3" id="myTabContent">
+                    <!-- pending orders section -->
+                    <div
+                      class="tab-pane fade show active"
+                      id="pending"
+                      role="tabpanel"
+                      aria-labelledby="pending-tab"
+                    >
+                        @if ($pendingOrderCount>0)
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Name</th>
+                                <th>Qty</th>
+                                <th>Order date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pendingOrders as $pendingOrder)
+                                <tr>
+                                    <td>
+                                    <img
+                                        src="{{asset("/image/".$pendingOrder->product->image)}}"
+                                        class="order-product-image"
+                                        alt="{{$pendingOrder->product->image}}"
+                                    />
+                                    </td>
+                                    <td>{{$pendingOrder->product->name}}</td>
+                                    <td>{{$pendingOrder->quantity}}</td>
+                                    <td>{{$pendingOrder->created_at->diffForHumans()}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @else
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="badge bg-danger">No order yet</div>
+                        </div>
+                        @endif
+
+                    </div>
+
+                    <!-- completed orders section -->
+                    <div
+                      class="tab-pane fade"
+                      id="completed"
+                      role="tabpanel"
+                      aria-labelledby="completed-tab"
+                    >
+                        @if ($completedOrderCount>0)
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Name</th>
+                                    <th>Qty</th>
+                                    <th>Order date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($completedOrders as $completedOrder)
+                                    <tr>
+                                        <td>
+                                        <img
+                                            src="{{asset("/image/".$completedOrder->product->image)}}"
+                                            class="order-product-image"
+                                            alt="{{$completedOrder->product->image}}"
+                                        />
+                                        </td>
+                                        <td>{{$completedOrder->product->name}}</td>
+                                        <td>{{$completedOrder->quantity}}</td>
+                                        <td>{{$completedOrder->updated_at->diffForHumans()}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end">
+                               {{$completedOrders->links()}}
+                            </div>
+
+                        @else
+                        <div class="d-flex justify-content-center align-items-center">
+                             <div class="badge bg-danger">No order yet</div>
+                        </div>
+                        @endif
+
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- product detail section -->
+@endsection
+@section('profile-script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(()=>{
+        $("#image-upload-input").change(async()=>{
+            const formData = new FormData();
+            const imageInput = document.querySelector("#image-upload-input");
+            if(imageInput.files[0]){
+                if(imageInput.files[0].type === "image/jpeg" || imageInput.files[0].type === "image/jpg" || imageInput.files[0].type === "image/png"){
+                    formData.append("image",imageInput.files[0]);
+                    $("#image-upload-btn").addClass("d-block");
+                    $("#spinner").removeClass("d-none");
+                    $("#image-upload-input-wrap").addClass("d-none");
+                    const res = await axios.post("{{url("/uploadImage")}}",formData,{
+                        headers: {
+                            "Content-Type" : "multipart/form-data"
+                        }
+                    });
+                    $("#user-image").attr("src",`${res.data}`);
+                    $("#image-upload-btn").removeClass("d-block");
+                    $("#spinner").addClass("d-none");
+                    $("#image-upload-input-wrap").removeClass("d-none");
+                    new Noty({
+                    type: "info",
+                    layout: "centerRight",
+                    text     : "your profile is updated",
+                    timeout: 3000,
+                    killer: true,
+                    }).show();
+                }else{
+                    new Noty({
+                    type: "error",
+                    layout: "centerRight",
+                    text     : "please choose an image (jpeg,jpg,png)",
+                    timeout: 3000,
+                    killer: true,
+                    }).show();
+                }
+            }else{
+                new Noty({
+                type: "error",
+                layout: "centerRight",
+                text     : "please choose an image",
+                timeout: 3000,
+                killer: true,
+                }).show();
+            }
+        })
+    });
+</script>
 @endsection

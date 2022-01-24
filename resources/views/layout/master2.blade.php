@@ -52,7 +52,7 @@
         transition: 0.5s ease;
         z-index: 1;
       }
-      .nav-link:hover {
+      .nav-link:not(.nav-link.order-section):hover {
         color: #2ba9cd !important;
       }
       .nav-link::before {
@@ -69,7 +69,7 @@
         border-radius: 10rem;
         z-index: -1;
       }
-      .nav-link:hover::before {
+      .nav-link:not(.nav-link.order-section):hover::before {
         width: 100%;
         height: 100%;
         background-color: #fff;
@@ -135,7 +135,25 @@
         display: none;
       }
       .comment-wrap:hover>.delete-btn-wrap{
-          display:block;
+        display:block;
+      }
+      #image-upload-btn{
+        width: 100%;
+        height: 100%;
+        background-color: #0008;
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      #upload-icon{
+        opacity: .5;
+        cursor: pointer;
+      }
+      #upload-icon:hover{
+        opacity: 1;
+      }
+      #image-container:hover>#image-upload-btn{
+        display: block;
       }
     </style>
   </head>
@@ -166,40 +184,7 @@
           id="navbarSupportedContent"
           style="z-index: 10000"
         >
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link nav-link-me active-link" aria-current="page" href="{{url("/")}}"
-                  >Home<span></span
-                ></a>
-              </li>
-              @auth
-              <li class="nav-item">
-                  <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
-                    >Favourites<span></span
-                  ></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
-                    >Cart<span></span
-                    ><span class="badge rounded-pill bg-danger"> 99+ </span></a
-                  >
-                </li>
-              <li class="nav-item">
-                <a href="{{url("/profile")}}" class="nav-link nav-link-me">Profile<span></span></a>
-              </li>
-              <li class="nav-item">
-                <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
-              </li>
-              @endauth
-              @guest
-              <li class="nav-item">
-                   <a href="{{url("/signin")}}" class="nav-link nav-link-me">Signin<span></span></a>
-              </li>
-              <li class="nav-item">
-                  <a href="{{url("/register")}}" class="nav-link nav-link-me">Register<span></span></a>
-              </li>
-              @endguest
-          </ul>
+         @yield('nav-items')
         </div>
       </div>
     </nav>
@@ -248,5 +233,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @yield('comment-script')
     @yield('cart-script')
+    @yield('profile-script')
   </body>
 </html>
