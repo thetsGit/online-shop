@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index()
     {
         $orderCount = ProductOrder::where('status','pending')->count();
-        $users = User::orderBy('updated_at','DESC')->where('role','user')->with('order')->paginate(5);
+        $users = User::orderBy('updated_at','DESC')->where('role','user')->with('orders')->paginate(5);
         return view('admin.user.index',compact('users','orderCount'));
     }
 

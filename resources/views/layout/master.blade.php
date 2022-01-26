@@ -49,6 +49,7 @@
         font-family: "Titillium Web", sans-serif;
         margin: 0;
         padding: 0;
+        position: relative;
       }
       body * {
         box-sizing: border-box;
@@ -151,75 +152,47 @@
         background: none;
         padding: 0;
       }
+      .category-text{
+        display: inline-block;
+        transform: translateY(200px) scale(1.5);
+        opacity: 0
+      }
+      .product-card{
+        transform: translateY(30px) scale(1.5);
+        opacity: 0
+      }
+      #elavator{
+        right: 3rem;
+        bottom: 2rem;
+        cursor: pointer;
+        transition: .5s ease-in-out;
+      }
+      #elavator:hover{
+          transform: scale(.95);
+          opacity: .9;
+          z-index: 100000000!important;
+      }
     </style>
   </head>
-  <body>
-    <!-- nav bar -->
-    <nav
-      class="navbar navbar-light text-black navbar-expand-lg bg-transparent w-100 shadow-0"
-      style="position: fixed; display: block; top: 0; z-index: 10000"
-      id="navbar"
-    >
-      <div class="container-fluid">
-        <a class="navbar-brand text-info" id="navbar-brand" href="#"
-          ><span class="ms-1 fw-bold fs-5"
-            ><i class="fas fa-cat fs-3"></i>Savannah</span
-          ></a
-        >
-        <button
-          class="navbar-toggler border-0 text-white d-lg-none d-flex justify-content-center align-items-center"
-          id="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-        >
-          <i class="fas fa-bars"></i>
-        </button>
-        <div
-          class="collapse navbar-collapse"
-          id="navbarSupportedContent"
-          style="z-index: 10000"
-        >
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link nav-link-me active-link" aria-current="page" href="{{url("/")}}"
-                >Home<span></span
-              ></a>
-            </li>
-            @auth
-            @if (auth()->check() && auth()->user()->role === "user")
-                <li class="nav-item">
-                    <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
-                    >Favourites<span></span
-                    ></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
-                    >Cart<span></span
-                    ><span class="badge rounded-pill bg-primary">{{$cart_count}}</span></a
-                    >
-                </li>
-                <li class="nav-item">
-                    <a href="{{url("/profile")}}" class="nav-link nav-link-me">Profile<span></span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
-                </li>
-            @endif
-            @endauth
-            @guest
-            <li class="nav-item">
-                 <a href="{{url("/signin")}}" class="nav-link nav-link-me">Signin<span></span></a>
-            </li>
-            <li class="nav-item">
-                <a href="{{url("/register")}}" class="nav-link nav-link-me">Register<span></span></a>
-            </li>
-            @endguest
+  <body id="body">
+    {{-- loading state --}}
+    <div class="vw-100 vh-100 d-flex justify-content-center align-items-center" id="loading-show">
+      <img src="{{asset("/image/static/loading.svg")}}" alt="loading icon">
+    </div>
+    <div id="loaded-content" class="d-none">
 
-          </ul>
-        </div>
-      </div>
-    </nav>
+    @yield('nav-items')
+
+    {{-- elavator --}}
+    <div style="z-index: 100000" class="position-fixed d-none" id="elavator">
+        <a href="#product-section">
+            <div class="card bg-primary d-flex justify-content-center align-items-center rounded-circle text-white" style="width: 3rem;
+            height: 3rem;">
+            <i class="fas fa-chevron-up"></i>
+            </div>
+        </a>
+    </div>
+
 
     <!-- hero section -->
     <div class="container-fluid" id="hero">
@@ -238,9 +211,9 @@
                     <h3
                         class="text-light mb-3 text-center"
                         style="font-size: max(3vw, 25px)"
+                        id="hero-title"
                     >
-                        Browse & Get
-                        everything online
+                        <span id="browse">Browse</span> <span> & </span> <span id="get">Get</span> <span id="everything">everything</span> <span id="online">online</span>
                     </h3>
 
                     <!-- search bar -->
@@ -248,6 +221,7 @@
                         action="{{url("/products"."#product-section")}}"
                         class="w-100 flex-column flex-sm-row mb-2 d-none d-sm-flex"
                         method="get"
+                        id="search-box"
                     >
                         <input
                         type="text"
@@ -263,16 +237,16 @@
                     </form>
 
                 <!-- suggested text -->
-                    <p class="text-white-50 text-center">
+                    <p class="text-white-50 text-center" id="supporting-text">
                         The best online shop ever with latest fashion products available for
-                        <a class="text-info" href="{{url("products/ageGroup/man#product-section")}}" style="text-decoration: none"
+                        <a class="text-info rotating-agegroup-text d-inline-block" href="{{url("products/ageGroup/man#product-section")}}" style="text-decoration: none"
                         >men</a
                         >,
-                        <a class="text-info" href="{{url("products/ageGroup/woman#product-section")}}" style="text-decoration: none"
+                        <a class="text-info rotating-agegroup-text d-inline-block" href="{{url("products/ageGroup/woman#product-section")}}" style="text-decoration: none"
                         >women</a
                         >
                         and
-                        <a class="text-info" href="{{url("products/ageGroup/kid#product-section")}}" style="text-decoration: none"
+                        <a class="text-info rotating-agegroup-text d-inline-block" href="{{url("products/ageGroup/kid#product-section")}}" style="text-decoration: none"
                         >kids</a
                         >
                     </p>
@@ -390,10 +364,10 @@
         ><span>Thethan@2022</span></a
       >
     </div>
-
+  </div>
     <!-- script files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"
       integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A=="
@@ -429,6 +403,26 @@
       });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    @yield('cart-script')
+    @yield('extra-script')
+    <script>
+        window.addEventListener("scroll",()=>{
+            if(pageYOffset > 1000){
+                $("#elavator").removeClass("d-none");
+            }else{
+                $("#elavator").addClass("d-none");
+            }
+        });
+    </script>
+    @if (session("error")||session("success"))
+    <script>
+    new Noty({
+    type: "{{session("error")?"error":"info"}}",
+    layout: "centerRight",
+    text     : "{{session("error")?session("error"):session("success")}}",
+    timeout: 3000,
+    killer: true,
+    }).show();
+    </script>
+    @endif
   </body>
 </html>

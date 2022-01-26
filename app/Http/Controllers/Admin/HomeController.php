@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductOrder;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -21,10 +22,33 @@ class HomeController extends Controller
         }
         arsort($products);
         $highDemandProducts = array_slice($products,0,5);
-        $latestOrders = ProductOrder::latest()->limit(5)->with('user','product')->get();
         $totalViewCount = Product::sum('view_count');
-        $totalUsers= User::where('role','user')->count();
+
+
+        //
+        $totalUsers = User::where("role","user")->count();
+        // $usersObj = $userOrm->selectRaw("name")->get();
+        // $users = [];
+        // foreach ($usersObj as $user) {
+        //     $users[] = $user->name;
+        // }
+
+        // $userOrderCount = $userOrm->withCount("orders");
+        $dates = [];
+        $dateOrders = [];
+        for ($i=0; $i < 10; $i++) {
+            $dates[] = Carbon::now()->subDays($i)->toDateString();
+            $dateOrders[] = intval(ProductOrder::whereDate("created_at",$dates[$i])->sum("quantity"));
+        }
+        // return $dates;
+        // return $highDemandProducts;
+        // $highDemandProducts = [];
+        // $totalRevenues = [];
+        // foreach ($highDemandProductsObj as $highDemandProduct => $totalRevenue) {
+        //     $highDemandProducts[] = $highDemandProduct;
+        //     $totalRevenues[] = $totalRevenue;
+        // }
         $orderCount = ProductOrder::where('status','pending')->count();
-        return view('admin.home.index',compact('orderCount','highDemandProducts','latestOrders','totalViewCount','totalUsers'));
+        return view('admin.home.index',compact('orderCount','highDemandProducts','totalViewCount','totalUsers','dates','dateOrders'));
     }
 }

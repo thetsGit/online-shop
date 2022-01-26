@@ -27,7 +27,7 @@
               <span class="fw-bold">{{$user->name}}</span></td>
             <td class="align-middle">{{$user->email}}</td>
             <td class="align-middle">
-             <span class="fs-6 fw-bold">{{count($user->order)}}</span>
+             <span class="fs-6 fw-bold">{{count($user->orders)}}</span>
             </td>
             <td class="align-middle">{{$user->updated_at->diffForHumans()}}</td>
           </tr>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AgeGroup;
 use App\Models\Category;
+use App\Models\FavList;
 use App\Models\Product;
 use App\Models\ProductCart;
 use App\Models\ProductOrder;
@@ -28,7 +29,7 @@ class PageController extends Controller
     }
 
     public function signinStore(Request $request){
-       if(!auth()->attempt($request->only("email","password"))){
+       if(!auth()->guard("web")->attempt($request->only("email","password"))){
           return redirect()->back()->with("error","Wrong credentials");
        }
        $welcomeMessage = "Welcome ".auth()->user()->name;
@@ -96,5 +97,9 @@ class PageController extends Controller
         ]);
 
       return asset("/image")."/".$imageName;
+    }
+    public function showFavourites(){
+        $favourites = FavList::where("user_id",auth()->user()->id)->with("product.category","product.ageGroup")->paginate(12)->fragment("product-section");
+        return view("favourites",compact("favourites"));
     }
 }

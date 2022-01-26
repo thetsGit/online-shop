@@ -1,4 +1,40 @@
 @extends('layout.master2')
+@section('nav-items')
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link nav-link-me" aria-current="page" href="{{url("/")}}"
+          >Home<span></span
+        ></a>
+    </li>
+    @auth
+    <li class="nav-item">
+        <a class="nav-link nav-link-me" href="{{url("/favourites#product-section")}}"
+        >Favourites<span></span
+        ></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
+        >Cart<span></span
+        ><span class="badge rounded-pill bg-danger">{{$cart_count}}</span></a
+        >
+    </li>
+    <li class="nav-item">
+    <a href="{{url("/profile")}}" class="nav-link nav-link-me">Profile<span></span></a>
+    </li>
+    <li class="nav-item">
+    <a href="{{url("/signout")}}" class="nav-link nav-link-me">Signout<span></span></a>
+    </li>
+    @endauth
+    @guest
+    <li class="nav-item">
+        <a href="{{url("/signin")}}" class="nav-link nav-link-me">Signin<span></span></a>
+    </li>
+    <li class="nav-item">
+        <a href="{{url("/register")}}" class="nav-link nav-link-me">Register<span></span></a>
+    </li>
+    @endguest
+</ul>
+@endsection
 @section('content')
     <!-- product detail section -->
     <div class="container-fluid py-5 position-relative" style="background-color: azure" id="detail-section">
@@ -6,7 +42,7 @@
           <div class="row">
             <div class="col-12 col-md-4">
               <div class="card p-5 position-sticky px-3" style="top: 6rem">
-                <div class="card-body">
+                <div class="card-body d-flex justify-content-center">
                   <img src="{{asset("image/".$product->image)}}" alt="" class="img-fluid" />
                 </div>
                 <div
@@ -122,53 +158,57 @@
                   >
                     @foreach ($product->comments as $comment)
                     @if ($comment->user->id === auth()->user()->id)
-                    <div class="d-flex mb-3 comment-super-wrap">
-                        <div class="d-flex align-items-start">
-                            <img
-                            src="{{asset("image/".$comment->user->image)}}"
-                            class="cmt-profile rounded-circle"
-                            alt="{{$comment->user->image}}"
-                            />
-                            <div class="rounded-3 position-relative flex-grow-1 p-0 ms-2 overflow-hidden comment-wrap">
-                                <div class="position-absolute w-100 h-100 p3 delete-btn-wrap" style="background-color: #0003">
-                                    <span class="d-inline-block ms-auto my-2 me-2 d-flex justify-content-center align-items-center shadow-3 rounded-circle bg-white text-black delete-cmt-btn" style="width: 2rem;height: 2rem;" data-comment-id="{{$comment->id}}">
-                                        <i style="pointer-events: none" class="fas fa-times"></i>
-                                    </span>
-                                </div>
-                                <div
-                                class="flex-grow-1 p-2 rounded-3 text-black"
-                                style="background-color: lightyellow"
-                                >
-                                    <div class="title d-flex justify-content-between align-items-center">
-                                        <span class="fs-6 fw-bold">You &middot; <span class="text-black-50" style="font-size: .8rem">{{$comment->user->name}}</span></span>
-                                        <span class="fw-lighter ms-2"
-                                        ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
-                                        >
+                    <div class="comment-wrapper">
+                        <div class="d-flex mb-3 comment-super-wrap">
+                            <div class="d-flex align-items-start">
+                                <img
+                                src="{{asset("image/".$comment->user->image)}}"
+                                class="cmt-profile rounded-circle"
+                                alt="{{$comment->user->image}}"
+                                />
+                                <div class="rounded-3 position-relative flex-grow-1 p-0 ms-2 overflow-hidden comment-wrap">
+                                    <div class="position-absolute w-100 h-100 p3 delete-btn-wrap" style="background-color: #0003">
+                                        <span class="d-inline-block ms-auto my-2 me-2 d-flex justify-content-center align-items-center shadow-3 rounded-circle bg-white text-black delete-cmt-btn" style="width: 2rem;height: 2rem;" data-comment-id="{{$comment->id}}">
+                                            <i style="pointer-events: none" class="fas fa-times"></i>
+                                        </span>
                                     </div>
-                                    <div>{{$comment->comment}}</div>
+                                    <div
+                                    class="flex-grow-1 p-2 rounded-3 text-black"
+                                    style="background-color: lightyellow"
+                                    >
+                                        <div class="title d-flex justify-content-between align-items-center">
+                                            <span class="fs-6 fw-bold">You &middot; <span class="text-black-50" style="font-size: .8rem">{{$comment->user->name}}</span></span>
+                                            <span class="fw-lighter ms-2"
+                                            ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
+                                            >
+                                        </div>
+                                        <div>{{$comment->comment}}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     @else
-                    <div class="d-flex">
-                        <div class="d-flex align-items-start mb-3">
-                            <img
-                            src="{{asset("image/".$comment->user->image)}}"
-                            class="cmt-profile rounded-circle"
-                            alt="{{$comment->user->image}}"
-                            />
-                            <div
-                            class="flex-grow-1 p-2 rounded-3 text-black ms-2"
-                            style="background-color: azure"
-                            >
-                            <div class="title d-flex justify-content-between align-items-center">
-                                <span class="fs-6 fw-bold">{{$comment->user->name}}</span>
-                                <span class="fw-lighter ms-2"
-                                ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
+                    <div class="comment-wrapper">
+                        <div class="d-flex">
+                            <div class="d-flex align-items-start mb-3">
+                                <img
+                                src="{{asset("image/".$comment->user->image)}}"
+                                class="cmt-profile rounded-circle"
+                                alt="{{$comment->user->image}}"
+                                />
+                                <div
+                                class="flex-grow-1 p-2 rounded-3 text-black ms-2"
+                                style="background-color: azure"
                                 >
-                            </div>
-                            <div>{{$comment->comment}}</div>
+                                <div class="title d-flex justify-content-between align-items-center">
+                                    <span class="fs-6 fw-bold">{{$comment->user->name}}</span>
+                                    <span class="fw-lighter ms-2"
+                                    ><i><small class="text-black-50">{{$comment->created_at->diffForHumans()}}</small></i></span
+                                    >
+                                </div>
+                                <div>{{$comment->comment}}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -211,7 +251,7 @@
       </div>
       <!-- product detail section -->
 @endsection
-@section('comment-script')
+@section('extra-script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 
@@ -220,6 +260,8 @@ const newComment = document.getElementById("new-comment");
 const commentBtn = document.getElementById("comment-btn");
 const commentSection = document.getElementById("comment-section");
 const deleteBtns = document.getElementsByClassName("delete-cmt-btn");
+const commentWrappers = document.querySelectorAll(".comment-wrapper");
+
 Array.prototype.forEach.call(deleteBtns,(deleteBtn)=>{
     deleteBtn.addEventListener("click",async(e)=>{
     let formData = new FormData();
@@ -246,9 +288,6 @@ Array.prototype.forEach.call(deleteBtns,(deleteBtn)=>{
 });
 });
 
-// const deleteCommentHandler = (cmdId)=>{
-//     console.log("hello");
-// }
 commentBtn.addEventListener("click",async()=>{
 let formData = new FormData();
 formData.append("newComment",newComment.value);
@@ -329,19 +368,9 @@ killer: true,
 comment.scrollIntoView({behavior: "smooth",alignToTop: true});
 }
 });
+
 });
+
+
 </script>
-@endsection
-@section('cart-script')
-@if (session("error")||session("success"))
-<script>
-    new Noty({
-    type: "{{session("error")?"error":"info"}}",
-    layout: "centerRight",
-    text     : "{{session("error")?session("error"):session("success")}}",
-    timeout: 3000,
-    killer: true,
-    }).show();
-</script>
-@endif
 @endsection

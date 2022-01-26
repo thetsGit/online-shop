@@ -18,10 +18,10 @@ class UserAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->check()){
+        if(!auth()->guard('web')->check()){
             return redirect("/signin");
          }
-        if(auth()->user()->role !== "user"){
+        if(auth()->guard("web")->user()->role !== "user"){
             return redirect("/signin");
         }
         return $next($request);

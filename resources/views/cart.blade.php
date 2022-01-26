@@ -8,7 +8,7 @@
     </li>
     @auth
     <li class="nav-item">
-        <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
+        <a class="nav-link nav-link-me" href="{{url("/favourites#product-section")}}"
         >Favourites<span></span
         ></a>
     </li>
@@ -52,6 +52,7 @@ style="
         <?php
         $totalItems = 0;$totalPrice = 0;
             ?>
+        @if (count($productsInCart)>0)
         @foreach ($productsInCart as $productInCart)
         <div class="d-md-flex d-block justify-content-between mb-3 align-items-center">
             <div class="d-flex align-items-center justify-content-center">
@@ -108,6 +109,13 @@ style="
           $totalPrice += $productInCart->quantity*$productInCart->product->price;
           ?>
         @endforeach
+        @else
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <span class="badge bg-danger">No item yet</span>
+            <a href="{{url("/#product-section")}}" class="btn btn-link">Add now</a>
+            {{-- <span class="badge bg-danger">No item yet</span> --}}
+        </div>
+        @endif
       </div>
     </div>
 
@@ -119,11 +127,11 @@ style="
         >
             <div class="fs-5 position-relative">
                 <div class="position-relative bg-0">
-                    <span class="badge bg-danger position-absolute border-light translate-middle rounded-pill start-100" style="font-size: .8rem;border-width: 3px;">
+                    <span id="item-count" class="badge bg-danger position-absolute border-light translate-middle rounded-pill start-100 d-inline-block" style="font-size: .8rem;border-width: 3px;z-index: 5;">
                         {{$totalItems}}
                     </span>
                     <span>
-                        <i class="fas fa-shopping-cart fa-2x"></i>
+                        <i class="fas fa-shopping-cart fa-2x" id="cart-icon"></i>
                     </span>
                 </div>
             </div>
@@ -136,7 +144,7 @@ style="
             <span class="fs-5">Total</span>
             <span
               ><sup>mmk</sup
-              ><span class="fw-bold fs-3">{{$totalPrice}}</span></span
+              ><span class="fw-bold fs-3" id="totalPrice">{{$totalPrice}}</span></span
             >
           </div>
           <a href="{{url("/#product-section")}}" class="btn btn-primary m-0 mb-2">Add More</a>
@@ -148,16 +156,29 @@ style="
 </div>
 </div>
 @endsection
-@section('cart-script')
-@if (session("error")||session("success"))
+@section('extra-script')
 <script>
-    new Noty({
-    type: "{{session("error")?"error":"info"}}",
-    layout: "centerRight",
-    text     : "{{session("error")?session("error"):session("success")}}",
-    timeout: 3000,
-    killer: true,
-    }).show();
+$(()=>{
+    anime({
+        targets: "#cart-icon",
+        translateX: [-300,0],
+        opacity: [0,1],
+        rotate: "3turn"
+    });
+
+    const datas = {
+        totalPrice: 0
+        };
+    anime({
+    targets: datas,
+    totalPrice: {{$totalPrice}},
+    easing: 'linear',
+    round: 1,
+    update: function() {
+        document.querySelector('#totalPrice').innerHTML = datas.totalPrice;
+    }
+    });
+});
+
 </script>
-@endif
 @endsection

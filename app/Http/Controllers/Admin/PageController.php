@@ -15,17 +15,14 @@ class PageController extends Controller
        return view("admin.auth.login");
     }
     public function loginCheck(Request $request){
-       if(!auth()->attempt($request->only("email","password"))){
+       if(!auth()->guard('admin')->attempt($request->only("email","password"))){
           return redirect("admin/login")->with("error","Wrong credentials");
        }
-       if(auth()->user()->role !== "admin"){
-           return redirect("admin/login")->with("error","You are not admin");
-       }
-       $username = Auth::user()->name;
+       $username = Auth::guard('admin')->user()->name;
        return redirect("admin")->with("success","Welcome back $username");
     }
     public function logout(){
-       auth()->logout();
+       auth()->guard('admin')->logout();
        return redirect("admin/login");
     }
 }

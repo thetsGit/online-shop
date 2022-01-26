@@ -46,6 +46,7 @@ Route::group(["middleware"=>"shareData"],function(){
         Route::get("/profile","PageController@profile");//view profile
         Route::post("/uploadImage","PageController@UploadProfileImage");
         Route::get("/makeOrder","OrderController@makeOrder");//make order
+        Route::get("/favourites","PageController@showFavourites");//show favourites
     });
 });
 

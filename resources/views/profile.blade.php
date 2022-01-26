@@ -8,7 +8,7 @@
     </li>
     @auth
     <li class="nav-item">
-        <a class="nav-link nav-link-me" href="{{url("/favourites")}}"
+        <a class="nav-link nav-link-me" href="{{url("/favourites#product-section")}}"
         >Favourites<span></span
         ></a>
     </li>
@@ -80,7 +80,7 @@
                       >
                         <div>
                           <div class="mb-2">Pending Orders</div>
-                          <div class="fw-bold fs-5">{{$pendingOrderCount}}</div>
+                          <div class="fw-bold fs-5" id="pendingCount">{{$pendingOrderCount}}</div>
                         </div>
                         <div
                           class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center"
@@ -96,7 +96,7 @@
                       >
                         <div>
                           <div class="mb-2">Complete Orders</div>
-                          <div class="fw-bold fs-5">{{$completedOrderCount}}</div>
+                          <div class="fw-bold fs-5" id="completedCount">{{$completedOrderCount}}</div>
                         </div>
                         <div
                           class="rounded-circle bg-success text-white d-flex justify-content-center align-items-center"
@@ -112,7 +112,7 @@
                       >
                         <div>
                           <div class="mb-2">Favourites</div>
-                          <div class="fw-bold fs-5">{{$user->favourites_count}}</div>
+                          <div class="fw-bold fs-5" id="favouriteCount">{{$user->favourites_count}}</div>
                         </div>
                         <div
                           class="rounded-circle bg-warning text-white d-flex justify-content-center align-items-center"
@@ -128,7 +128,7 @@
                       >
                         <div>
                           <div class="mb-2">Liked</div>
-                          <div class="fw-bold fs-5">{{$user->likes_count}}</div>
+                          <div class="fw-bold fs-5" id="likeCount">{{$user->likes_count}}</div>
                         </div>
                         <div
                           class="rounded-circle bg-danger text-white d-flex justify-content-center align-items-center"
@@ -144,7 +144,7 @@
                       >
                         <div>
                           <div class="mb-2">Commented</div>
-                          <div class="fw-bold fs-5">{{$user->comments_count}}</div>
+                          <div class="fw-bold fs-5" id="commentCount">{{$user->comments_count}}</div>
                         </div>
                         <div
                           class="rounded-circle bg-info d-flex text-white justify-content-center align-items-center"
@@ -277,7 +277,7 @@
         </div>
       </div>
 @endsection
-@section('profile-script')
+@section('extra-script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(()=>{
@@ -325,6 +325,31 @@
                 }).show();
             }
         })
+
+        const datas = {
+        pendingCount: 0,
+        completedCount: 0,
+        favouriteCount: 0,
+        likeCount: 0,
+        commentCount: 0
+        }
+        anime({
+        targets: datas,
+        pendingCount: {{$pendingOrderCount}},
+        completedCount: {{$completedOrderCount}},
+        favouriteCount: {{$user->favourites_count}},
+        likeCount: {{$user->likes_count}},
+        commentCount: {{$user->comments_count}},
+        easing: 'linear',
+        round: 1,
+        update: function() {
+            document.querySelector('#pendingCount').innerHTML = datas.pendingCount;
+            document.querySelector('#completedCount').innerHTML = datas.completedCount;
+            document.querySelector('#favouriteCount').innerHTML = datas.favouriteCount;
+            document.querySelector('#likeCount').innerHTML = datas.likeCount;
+            document.querySelector('#commentCount').innerHTML = datas.commentCount;
+        }
+        });
     });
 </script>
 @endsection
