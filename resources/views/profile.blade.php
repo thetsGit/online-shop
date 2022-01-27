@@ -39,7 +39,7 @@
     <!-- product detail section -->
     <div class="container-fluid py-5" style="background-color: azure">
         <div class="container py-5">
-          <div class="card p-5">
+          <div class="card p-0 p-md-5">
             <div class="card-body">
               <div class="row">
                 <div class="col-12 col-md-4">
@@ -70,7 +70,7 @@
                 <div class="col-12 col-md-8">
                   <div class="d-flex justify-content-between">
                     <div class="fs-5 text-black-50 mb-3">Statistics</div>
-                    <div class="fs-6 text-primary"><i>joined {{$user->created_at->diffForHumans()}}</i></div>
+                    <div class="fs-6 text-primary mb-sm-3"><i>joined {{$user->created_at->diffForHumans()}}</i></div>
                   </div>
 
                   <div class="row mb-3">
@@ -278,7 +278,6 @@
       </div>
 @endsection
 @section('extra-script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(()=>{
         $("#image-upload-input").change(async()=>{

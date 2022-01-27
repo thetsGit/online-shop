@@ -113,13 +113,13 @@
         object-fit: cover;
         object-position: center;
       }
-      .action-icon {
+      /* .action-icon {
         transition: 0.5s ease;
       }
       .action-icon:hover {
         transform: scale(1.2);
         cursor: pointer;
-      }
+      } */
       .action-btn{
         text-decoration: none;
         outline: 0;
@@ -154,6 +154,19 @@
       }
       #image-container:hover>#image-upload-btn{
         display: block;
+      }
+      .likeBtn,.favouriteBtn{
+        display: inline-block;
+        transition: 0.5s ease;
+      }
+      .likeBtn:hover,.favouriteBtn:hover{
+          transform:scale(1.2);
+      }
+      .favouriteBtn>*{
+          pointer-events: none;
+      }
+      .likeBtn>*{
+          pointer-events: none;
       }
     </style>
   </head>
@@ -211,11 +224,7 @@
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"
@@ -230,19 +239,9 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @yield('extra-script')
-    @if (session("error")||session("success"))
-    <script>
-    new Noty({
-    type: "{{session("error")?"error":"info"}}",
-    layout: "centerRight",
-    text     : "{{session("error")?session("error"):session("success")}}",
-    timeout: 3000,
-    killer: true,
-    }).show();
-    </script>
-    @endif
+ @include('layout.triggerNoty')
   </body>
 </html>

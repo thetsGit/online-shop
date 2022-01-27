@@ -172,6 +172,19 @@
           opacity: .9;
           z-index: 100000000!important;
       }
+      .likeBtn,.favouriteBtn{
+        display: inline-block;
+        transition: 0.5s ease;
+      }
+      .likeBtn:hover,.favouriteBtn:hover{
+          transform:scale(1.2);
+      }
+      .favouriteBtn>*{
+          pointer-events: none;
+      }
+      .likeBtn>*{
+          pointer-events: none;
+      }
     </style>
   </head>
   <body id="body">
@@ -205,7 +218,7 @@
         class="d-flex container justify-content-center align-items-start flex-column w-100 h-100"
       >
         <div class="row w-100" style="z-index: 3">
-            <div class="col-12 col-md-6 offset-md-3">
+            <div class="col-12 col-lg-6 offset-lg-3 col-md-8 offset-md-2">
                 <div class="mb-5">
                     <!-- title -->
                     <h3
@@ -374,6 +387,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
       $(() => {
         const navbar = document.getElementById("navbar");
@@ -413,16 +427,7 @@
             }
         });
     </script>
-    @if (session("error")||session("success"))
-    <script>
-    new Noty({
-    type: "{{session("error")?"error":"info"}}",
-    layout: "centerRight",
-    text     : "{{session("error")?session("error"):session("success")}}",
-    timeout: 3000,
-    killer: true,
-    }).show();
-    </script>
-    @endif
+    @include('layout.triggerNoty')
+    @include('layout.actionScripts')
   </body>
 </html>

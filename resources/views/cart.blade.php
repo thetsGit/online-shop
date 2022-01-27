@@ -62,7 +62,7 @@ style="
                     alt=""
                 />
                 <div class="ms-4">
-                    <h3 class="mb-3">{{$productInCart->product->name}}</h3>
+                    <h3 class="mb-3 fs-5">{{$productInCart->product->name}}</h3>
                     <div class="mb-3">
                     <span class="mb-2">
                         Category: <span class="fw-bold">{{$productInCart->product->category->name}}</span></span

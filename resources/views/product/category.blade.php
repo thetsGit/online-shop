@@ -18,7 +18,7 @@
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
         >
-          <i class="fas fa-bars"></i>
+          <i class="fas fa-bars text-black"></i>
         </button>
         <div
           class="collapse navbar-collapse"
@@ -139,7 +139,7 @@
                             }
                         ?>
                         <div class="text-warning">
-                            <form class="d-inline" action="{{url("/toggleFavourite")}}" method="POST">
+                            {{-- <form class="d-inline" action="{{url("/toggleFavourite")}}" method="POST">
                                 @csrf
                                 <input type="text" name="user" value="{{auth()->user()->id}}" class="d-none">
                                 <input type="text" name="product" value="{{$product->id}}" class="d-none">
@@ -150,7 +150,15 @@
                                         <i class="far fa-star action-icon"></i>
                                     @endif
                                 </button>
-                            </form>
+                            </form> --}}
+                            <span class="favouriteBtn fs-5 active-icon" data-product-id={{$product->id}} style="cursor: pointer">
+                                <span class="spinner-border text-warning fs-6 d-none"></span>
+                                @if ($isFavourite)
+                                <i class="fas fa-star"></i></span>
+                                @else
+                                <i class="far fa-star"></i></span>
+                                @endif
+                            </span>
                         </div>
                         @endif
 
@@ -167,7 +175,7 @@
                           class="d-flex justify-content-between mb-2 align-items-center"
                         >
 
-                        @if (auth()->user() && auth()->user()->role === "user")
+                        @if (auth()->user())
                             <?php
                             $isLiked = false;
                             foreach ($product->likes as $like) {
@@ -177,7 +185,7 @@
                             }
                         ?>
                         <div class="fs-5 text-danger">
-                            <form class="d-inline" action="{{url("/toggleLike")}}" method="POST">
+                            {{-- <form class="d-inline" action="{{url("/toggleLike")}}" method="POST">
                                 @csrf
                                 <input type="text" name="user" value="{{auth()->user()->id}}" class="d-none">
                                 <input type="text" name="product" value="{{$product->id}}" class="d-none">
@@ -188,7 +196,15 @@
                                         <i class="far fa-heart action-icon"></i>
                                     @endif
                                 </button>
-                            </form>
+                            </form> --}}
+                            <span class="likeBtn fs-5 active-icon" data-product-id={{$product->id}} style="cursor: pointer">
+                                <span class="spinner-border text-danger fs-6 d-none"></span>
+                                @if ($isLiked)
+                                <i class="fas fa-heart"></i></span>
+                                @else
+                                <i class="far fa-heart"></i></span>
+                                @endif
+                            </span>
                             <small class="ms-1 text-black-50">{{$product->likes_count?$product->likes_count:0}}</small>
                         </div>
                         @endif
@@ -199,7 +215,7 @@
                           >
                         </div>
                         @auth
-                        @if (auth()->user()->role === "user")
+                        @if (auth()->user())
                         <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                             @csrf
                             <input type="text" name="productId" value="{{$product->id}}" class="d-none" />
@@ -231,98 +247,5 @@
   </div>
 @endsection
 @section('extra-script')
-    <script>
-         window.addEventListener("load",()=>{
-            $("#loading-show").addClass("d-none");
-            $("#loaded-content").removeClass("d-none");
-    });
-      $(()=>{
-        const browse = document.getElementById("browse");
-        const get = document.getElementById("get");
-        const everything = document.getElementById("everything");
-        const online = document.getElementById("online");
-        const categoryTexts = document.querySelectorAll(".category-text");
-        const productCards = document.querySelectorAll(".product-card");
-
-        const options = {
-        // root: document.querySelector('#body'),
-        rootMargin: '0px',
-        threshold: 1.0
-        }
-
-        const callback1 = (entries,observer)=>{
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    anime({
-                    targets: entry.target,
-                    translateY: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 300,
-                    });
-                    observer.unobserve(entry.target);
-                }
-                console.log(entry.target);
-            });
-
-        };
-
-        const observer1 = new IntersectionObserver(callback1, options);
-        categoryTexts.forEach( (cateText,index,list) => {
-            observer1.observe(cateText);
-        });
-
-        const callback2 = (entries,observer)=>{
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    anime({
-                    targets: entry.target,
-                    translateY: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 300,
-                    });
-                    observer.unobserve(entry.target);
-                }
-                console.log(entry.target);
-            });
-
-        };
-
-        const observer2 = new IntersectionObserver(callback2, options);
-        productCards.forEach( (productCard,index,list) => {
-            observer2.observe(productCard);
-        })
-
-
-        browse.innerHTML = browse.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        get.innerHTML = get.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        everything.innerHTML = everything.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        online.innerHTML = online.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        anime.timeline({
-          easing: "linear",
-          delay: 1500
-        }).add({
-            targets: ".jumping-char",
-            translateY: [0,-20,0],
-            translateX: [0,20,0],
-            scale:[1,2,1],
-            delay: anime.stagger(30)
-        }).add({
-            targets: "#search-box",
-            translateY: [30,0],
-            opacity: [0,1],
-            duration: 500
-        },800).add({
-            targets: "#supporting-text",
-            translateY: [30,0],
-            opacity: [0,1],
-            duration: 500
-        },1000).add({
-            targets: ".rotating-agegroup-text",
-            rotate: "3turn",
-            translateX: [1000,0]
-        },1000);
-      });
-    </script>
+@include('layout.heroAni')
 @endsection

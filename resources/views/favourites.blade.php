@@ -18,7 +18,7 @@ id="navbar"
     data-bs-toggle="collapse"
     data-bs-target="#navbarSupportedContent"
   >
-    <i class="fas fa-bars"></i>
+    <i class="fas fa-bars text-black"></i>
   </button>
   <div
     class="collapse navbar-collapse"
@@ -81,14 +81,18 @@ id="navbar"
                         <span class="badge bg-warning"> {{$favourite->product->ageGroup->name}}  </span>
                         </div>
                         <div class="text-warning">
-                            <form class="d-inline" action="{{url("/toggleFavourite")}}" method="POST">
+                            {{-- <form class="d-inline" action="{{url("/toggleFavourite")}}" method="POST">
                                 @csrf
                                 <input type="text" name="user" value="{{auth()->user()->id}}" class="d-none">
                                 <input type="text" name="product" value="{{$favourite->product->id}}" class="d-none">
                                 <button type="submit" class="text-warning fs-5 action-btn">
                                     <i class="fas fa-star action-icon"></i>
                                 </button>
-                            </form>
+                            </form> --}}
+                            <span class="text-danger fs-5 removeFavBtn action-icon d-inline-block" data-product-id="{{$favourite->product->id}}">
+                                <span class="spinner-border text-danger fs-6 d-none"></span>
+                                <i class="fas fa-times-circle" style="pointer-events: none"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="card-body d-flex justify-content-center">
@@ -124,98 +128,57 @@ id="navbar"
 </div>
 @endsection
 @section('extra-script')
-    <script>
-         window.addEventListener("load",()=>{
-            $("#loading-show").addClass("d-none");
-            $("#loaded-content").removeClass("d-none");
-    });
-      $(()=>{
-        const browse = document.getElementById("browse");
-        const get = document.getElementById("get");
-        const everything = document.getElementById("everything");
-        const online = document.getElementById("online");
-        const categoryTexts = document.querySelectorAll(".category-text");
-        const productCards = document.querySelectorAll(".product-card");
+<script>
 
-        const options = {
-        root: document.querySelector('#scrollArea'),
-        rootMargin: '0px',
-        threshold: 1.0
+$(()=>{
+const removeFavBtns = document.querySelectorAll(".removeFavBtn");
+removeFavBtns.forEach(removeFavBtn => {
+    removeFavBtn.addEventListener("click",async(e)=>{
+        // console.log($(e.target).parent().parent().parent().parent());
+        const formData = new FormData();
+        formData.append("product",e.target.dataset.productId);
+        const spinner = e.target.children[0];
+        const crossIcon = e.target.children[1];
+        spinner.classList.remove("d-none");
+        crossIcon.classList.add("d-none");
+        const {data}= await axios.post("{{url("/toggleFavourite")}}",formData);
+        spinner.classList.add("d-none");
+        if(data.success === "removed"){
+            $(e.target).parent().parent().parent().parent().addClass("removed");
         }
-
-        const callback1 = (entries,observer)=>{
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    anime({
-                    targets: entry.target,
-                    translateY: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 300,
-                    });
-                    observer.unobserve(entry.target);
-                }
-                console.log(entry.target);
-            });
-
-        };
-
-        const observer1 = new IntersectionObserver(callback1, options);
-        categoryTexts.forEach( (cateText,index,list) => {
-            observer1.observe(cateText);
+        else{
+            new Noty({
+            type: "error",
+            layout: "centerRight",
+            text     : data.error,
+            timeout: 3000,
+            killer: true,
+            }).show();
+            return;
+        }
+        anime({
+        targets: ".removed",
+        translateY: [0,300],
+        opacity: [1,0],
+        duration: 500
         });
+        setTimeout(() => {
+            $(".removed").addClass("d-none");
+        }, 600);
+        new Noty({
+        type: "info",
+        layout: "centerRight",
+        text : data.success,
+        timeout: 3000,
+        killer: true,
+        }).show();
 
-        const callback2 = (entries,observer)=>{
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    anime({
-                    targets: entry.target,
-                    translateY: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 300,
-                    });
-                    observer.unobserve(entry.target);
-                }
-                console.log(entry.target);
-            });
-
-        };
-
-        const observer2 = new IntersectionObserver(callback2, options);
-        productCards.forEach( (productCard,index,list) => {
-            observer2.observe(productCard);
-        })
+    })
+});
+});
 
 
-        browse.innerHTML = browse.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        get.innerHTML = get.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        everything.innerHTML = everything.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        online.innerHTML = online.innerHTML.split("").map(char => `<span class="jumping-char d-inline-block">${char}</span>`).join("");
-        anime.timeline({
-          easing: "linear",
-          delay: 1500
-        }).add({
-            targets: ".jumping-char",
-            translateY: [0,-20,0],
-            translateX: [0,20,0],
-            scale:[1,2,1],
-            delay: anime.stagger(30)
-        }).add({
-            targets: "#search-box",
-            translateY: [30,0],
-            opacity: [0,1],
-            duration: 500
-        },800).add({
-            targets: "#supporting-text",
-            translateY: [30,0],
-            opacity: [0,1],
-            duration: 500
-        },1000).add({
-            targets: ".rotating-agegroup-text",
-            rotate: "3turn",
-            translateX: [1000,0]
-        },1000);
-      });
-    </script>
+</script>
+@include('layout.heroAni')
 @endsection
+

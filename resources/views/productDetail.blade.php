@@ -57,7 +57,7 @@
                     }
                 ?>
                     <div class="fs-5 text-danger">
-                        <form class="d-inline" action="{{url("/toggleLike")}}" method="POST">
+                        {{-- <form class="d-inline" action="{{url("/toggleLike")}}" method="POST">
                             @csrf
                             <input type="text" name="user" value="{{auth()->user()->id}}" class="d-none">
                             <input type="text" name="product" value="{{$product->id}}" class="d-none">
@@ -69,7 +69,15 @@
                                     <i class="far fa-heart action-icon"></i>
                                 @endif
                             </button>
-                        </form>
+                        </form> --}}
+                        <span class="likeBtn fs-5 active-icon" data-product-id={{$product->id}} style="cursor: pointer">
+                            <span class="spinner-border text-danger fs-6 d-none"></span>
+                            @if ($isLiked)
+                            <i class="fas fa-heart"></i></span>
+                            @else
+                            <i class="far fa-heart"></i></span>
+                            @endif
+                        </span>
                         <small class="ms-1 text-black-50">{{$product->likes_count?$product->likes_count:0}}</small>
                     </div>
                   <?php
@@ -81,7 +89,7 @@
                     }
                 ?>
                   <div class="text-warning">
-                      <form class="d-inline" action="{{url("/toggleFavourite")}}" method="POST">
+                      {{-- <form class="d-inline" action="{{url("/toggleFavourite")}}" method="POST">
                         @csrf
                         <input type="text" name="user" value="{{auth()->user()->id}}" class="d-none">
                         <input type="text" name="product" value="{{$product->id}}" class="d-none">
@@ -92,11 +100,19 @@
                                 <i class="far fa-star action-icon"></i>
                             @endif
                         </button>
-                      </form>
+                      </form> --}}
+                      <span class="favouriteBtn fs-5 active-icon" data-product-id={{$product->id}} style="cursor: pointer">
+                        <span class="spinner-border text-warning fs-6 d-none"></span>
+                        @if ($isFavourite)
+                        <i class="fas fa-star"></i></span>
+                        @else
+                        <i class="far fa-star"></i></span>
+                        @endif
+                      </span>
                       @if ($isFavourite)
-                        <small class="ms-1 text-black-50">Favourite</small>
+                        <small class="ms-1 text-black-50 favourite-status">Favourite</small>
                       @else
-                         <small class="ms-1 text-black-50">Add to favourites</small>
+                         <small class="ms-1 text-black-50 favourite-status">Add to favourites</small>
                       @endif
                 </div>
 
@@ -104,7 +120,7 @@
               </div>
             </div>
             <div class="col-12 col-md-8">
-              <div class="card p-5">
+              <div class="card p-md-5 p-3">
                 <div class="mb-4">
                   <h3 class="fs-1 fw-bold mb-2">{{$product->name}}</h3>
                   <p>
@@ -261,6 +277,8 @@ const commentBtn = document.getElementById("comment-btn");
 const commentSection = document.getElementById("comment-section");
 const deleteBtns = document.getElementsByClassName("delete-cmt-btn");
 const commentWrappers = document.querySelectorAll(".comment-wrapper");
+const favouriteBtn = document.querySelector(".favouriteBtn");
+const likeBtn = document.querySelector(".likeBtn");
 
 Array.prototype.forEach.call(deleteBtns,(deleteBtn)=>{
     deleteBtn.addEventListener("click",async(e)=>{
@@ -368,6 +386,83 @@ killer: true,
 comment.scrollIntoView({behavior: "smooth",alignToTop: true});
 }
 });
+
+
+favouriteBtn.addEventListener("click",async(e)=>{
+    const formData = new FormData();
+    formData.append("product",e.target.dataset.productId);
+    const spinner = e.target.children[0];
+    spinner.classList.remove("d-none");
+    const starIcon = e.target.querySelector("i");
+    starIcon.classList.add("d-none");
+    const {data}= await axios.post("{{url("/toggleFavourite")}}",formData);
+    spinner.classList.add("d-none");
+    if(data.success === "removed"){
+        starIcon.classList = "far fa-star";
+        e.target.nextElementSibling.innerHTML = "Add to favourites";
+    }else if(data.success === "added"){
+        starIcon.classList = "fas fa-star";
+        e.target.nextElementSibling.innerHTML = "Favourites";
+    }
+    else{
+        new Noty({
+        type: "error",
+        layout: "centerRight",
+        text     : data.error,
+        timeout: 3000,
+        killer: true,
+        }).show();
+        return;
+    }
+    new Noty({
+    type: "info",
+    layout: "centerRight",
+    text     : data.success === "removed"? "removed from favourites":"added to favourites",
+    timeout: 3000,
+    killer: true,
+    }).show();
+
+});
+
+likeBtn.addEventListener("click",async(e)=>{
+    const formData = new FormData();
+    formData.append("product",e.target.dataset.productId);
+    const spinner = e.target.children[0];
+    spinner.classList.remove("d-none");
+    const likeIcon = e.target.querySelector("i");
+    likeIcon.classList.add("d-none");
+    const {data}= await axios.post("{{url("/toggleLike")}}",formData);
+    spinner.classList.add("d-none");
+    const likeIndicator = e.target.nextElementSibling;
+    const likeCount = Number(likeIndicator.innerHTML);
+    if(data.success === "unliked"){
+        likeIcon.classList = "far fa-heart";
+        likeIndicator.innerHTML = String(likeCount-1);
+    }else if(data.success === "liked"){
+        likeIcon.classList = "fas fa-heart";
+        likeIndicator.innerHTML = String(likeCount+1);
+    }
+    else{
+        new Noty({
+        type: "error",
+        layout: "centerRight",
+        text     : data.error,
+        timeout: 3000,
+        killer: true,
+        }).show();
+        return;
+    }
+    new Noty({
+    type: "info",
+    layout: "centerRight",
+    text     : data.success,
+    timeout: 3000,
+    killer: true,
+    }).show();
+
+});
+
+
 
 });
 

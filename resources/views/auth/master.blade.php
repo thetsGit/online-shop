@@ -34,7 +34,7 @@
         background-image: url("./image/static/heroImg3.jpg");
         background-position: top;
         background-size: cover;
-        height: max(48vw, 30rem);
+        /* height: max(48vw, 30rem); */
         backdrop-filter: blur(2px);
       }
       .block {
@@ -115,7 +115,7 @@
   <body>
     <!-- nav bar -->
     <nav
-      class="navbar navbar-light text-black navbar-expand-lg bg-transparent w-100"
+      class="navbar navbar-light text-black navbar-expand-lg bg-black w-100"
       style="position: fixed; display: block; top: 0; z-index: 10000"
       id="navbar"
     >
@@ -132,7 +132,7 @@
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
         >
-          <i class="fas fa-bars"></i>
+          <i class="fas fa-bars text-white"></i>
         </button>
         <div
           class="collapse navbar-collapse"
@@ -171,9 +171,10 @@
     </nav>
 
     <!-- hero section -->
-    <div class="container-fluid" id="hero">
+    <div class="container-fluid" style="padding-top: 5rem" id="hero">
       <div
-        class="d-flex container justify-content-center align-items-start flex-column w-100 h-100"
+        class="d-flex container justify-content-center align-items-start flex-column w-100 py-5"
+        style="height: max(100vh,40rem)"
       >
         <div class="row w-100">
           <!-- for hero content -->
@@ -186,7 +187,7 @@
 
     <!-- footer section -->
     <div
-      class="p-4 d-flex justify-content-center align-items-center bg-black text-white"
+      class="p-4 d-flex justify-content-center align-items-center bg-white"
     >
       Created with <i class="fas fa-heart text-danger mx-1"></i> by
       <a
@@ -212,30 +213,30 @@
       referrerpolicy="no-referrer"
     ></script>
     <script>
-      $(() => {
-        const navbar = document.getElementById("navbar");
+    //   $(() => {
+    //     const navbar = document.getElementById("navbar");
 
-        $("#navbar-toggler").toggle(
-          () => {
-            $("#navbar").removeClass("bg-transparent");
-            $("#navbar").addClass("bg-white");
-          },
-          () => {
-            $("#navbar").addClass("bg-transparent");
-            $("#navbar").removeClass("bg-white");
-          }
-        );
+    //     $("#navbar-toggler").toggle(
+    //       () => {
+    //         $("#navbar").removeClass("bg-transparent");
+    //         $("#navbar").addClass("bg-white");
+    //       },
+    //       () => {
+    //         $("#navbar").addClass("bg-transparent");
+    //         $("#navbar").removeClass("bg-white");
+    //       }
+    //     );
 
-        window.addEventListener("scroll", () => {
-          const offsetY = window.pageYOffset;
-          $("#hero").css("background-position-y", `${offsetY * 0.4}px`);
-          if (offsetY > 100) {
-            $("#navbar").addClass("bg-white").removeClass("shadow-0");
-          } else {
-            $("#navbar").removeClass("bg-white").addClass("shadow-0")
-          }
-        });
-      });
+    //     window.addEventListener("scroll", () => {
+    //       const offsetY = window.pageYOffset;
+    //       $("#hero").css("background-position-y", `${offsetY * 0.4}px`);
+    //       if (offsetY > 100) {
+    //         $("#navbar").addClass("bg-white").removeClass("shadow-0");
+    //       } else {
+    //         $("#navbar").removeClass("bg-white").addClass("shadow-0")
+    //       }
+    //     });
+    //   });
     </script>
   </body>
 </html>
