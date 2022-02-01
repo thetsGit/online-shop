@@ -17,8 +17,9 @@ id="navbar"
     type="button"
     data-bs-toggle="collapse"
     data-bs-target="#navbarSupportedContent"
+    data-status="close"
   >
-    <i class="fas fa-bars text-black"></i>
+    <i class="fas fa-bars text-black" style="pointer-events: none"></i>
   </button>
   <div
     class="collapse navbar-collapse w-100"
@@ -41,7 +42,7 @@ id="navbar"
           <li class="nav-item">
               <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
               >Cart<span></span
-              ><span class="badge rounded-pill bg-primary">{{$cart_count}}</span></a
+              ><span class="badge rounded-pill bg-primary" id="cart-count">{{$cart_count}}</span></a
               >
           </li>
           <li class="nav-item">
@@ -165,7 +166,7 @@ id="navbar"
                                                     </button>
                                                 </form> --}}
                                                 <span class="favouriteBtn fs-5 active-icon" data-product-id={{$filteredProduct->id}} style="cursor: pointer">
-                                                    <span class="spinner-border text-warning fs-6 d-none"></span>
+                                                    <span class="spinner-border text-warning fs-6 d-none spinner-border-sm"></span>
                                                     @if ($isFavourite)
                                                     <i class="fas fa-star"></i></span>
                                                     @else
@@ -214,7 +215,7 @@ id="navbar"
                                                     </button>
                                                 </form> --}}
                                                 <span class="likeBtn fs-5 active-icon" data-product-id={{$filteredProduct->id}} style="cursor: pointer">
-                                                    <span class="spinner-border text-danger fs-6 d-none"></span>
+                                                    <span class="spinner-border text-danger fs-6 d-none spinner-border-sm"></span>
                                                     @if ($isLiked)
                                                     <i class="fas fa-heart"></i></span>
                                                     @else
@@ -231,13 +232,17 @@ id="navbar"
                                             </div>
                                             @auth
                                             @if (auth()->user()->role === "user")
-                                            <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
+                                            {{-- <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                                                 @csrf
                                                 <input type="text" name="productId" value="{{$filteredProduct->id}}" class="d-none" />
                                                 <button type="submit" class="btn btn-info btn-block m-0">
                                                     Add to cart
                                                 </button>
-                                            </form>
+                                            </form> --}}
+                                            <span class="btn btn-info btn-block m-0 cartAddBtn" data-product-id="{{$filteredProduct->id}}">
+                                                <span class="spinner-border spinner-border-sm text-white d-none"></span>
+                                                <span>Add to cart</span>
+                                            </span>
                                             @endif
                                             @endauth
                                             @guest
@@ -282,7 +287,7 @@ id="navbar"
                                                     </button>
                                                 </form> --}}
                                                 <span class="favouriteBtn fs-5 active-icon" data-product-id={{$filteredProducts[$i]->id}} style="cursor: pointer">
-                                                    <span class="spinner-border text-warning fs-6 d-none"></span>
+                                                    <span class="spinner-border text-warning fs-6 d-none spinner-border-sm"></span>
                                                     @if ($isFavourite)
                                                     <i class="fas fa-star"></i></span>
                                                     @else
@@ -327,7 +332,7 @@ id="navbar"
                                                     </button>
                                                 </form> --}}
                                                 <span class="likeBtn fs-5 active-icon" data-product-id={{$filteredProducts[$i]->id}} style="cursor: pointer">
-                                                    <span class="spinner-border text-danger fs-6 d-none"></span>
+                                                    <span class="spinner-border text-danger fs-6 d-none spinner-border-sm"></span>
                                                     @if ($isLiked)
                                                     <i class="fas fa-heart"></i></span>
                                                     @else
@@ -345,13 +350,17 @@ id="navbar"
                                             </div>
                                             @auth
                                             @if (auth()->user()->role === "user")
-                                            <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
+                                            {{-- <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                                                 @csrf
                                                 <input type="text" name="productId" value="{{$filteredProducts[$i]->id}}" class="d-none" />
                                                 <button type="submit" class="btn btn-info btn-block m-0">
                                                     Add to cart
                                                 </button>
-                                            </form>
+                                            </form> --}}
+                                            <span class="btn btn-info btn-block m-0 cartAddBtn" data-product-id="{{$filteredProducts[$i]->id}}">
+                                                <span class="spinner-border spinner-border-sm text-white d-none"></span>
+                                                <span>Add to cart</span>
+                                            </span>
                                             @endif
                                             @endauth
                                             @guest
@@ -373,6 +382,7 @@ id="navbar"
 </div>
 @endsection
 @section('extra-script')
+@include('layout.cartAddScript')
 @include('layout.heroAni')
 @include('layout.actionScripts')
 @endsection

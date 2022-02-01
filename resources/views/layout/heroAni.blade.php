@@ -14,7 +14,7 @@
    const options = {
    // root: document.querySelector('#body'),
    rootMargin: '0px',
-   threshold: 1.0
+   threshold: .3
    }
 
    const callback1 = (entries,observer)=>{
@@ -90,5 +90,18 @@
        rotate: "3turn",
        translateX: [1000,0]
    },1000);
+
+   $("#navbar-toggler").click((e)=>{
+       console.log('clicked');
+       const hamburger = $(e.target);
+       if(hamburger.data("status") === "close"){
+        hamburger.parent().parent().addClass("bg-white");
+        hamburger.data("status","open");
+       }
+       else{
+       hamburger.parent().parent().removeClass("bg-white");
+       hamburger.data("status","close");
+       }
+   });
  });
 </script>

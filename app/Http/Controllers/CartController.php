@@ -15,44 +15,62 @@ class cartController extends Controller
     }
     public function addOne(Request $request){
        if(!$request->productId){
-           return redirect()->back()->with("error","product id is required")->withFragment("product-section");
+           return response()->json([
+               "error" => "bad request"
+           ]);
        }
        $product = Product::find($request->productId);
-       $successMsg = $product->name." is added";
+    //    $successMsg = $product->name." is added";
        if(!$product){
-           return redirect()->back()->with("error","invalid product")->withFragment("product-section");
+           return response()->json([
+               "error" => "bad request"
+           ]);
        }
+       $successMsg = $product->name." is added";
        $isInCart = ProductCart::where("user_id",auth()->user()->id)->where("product_id",$request->productId)->first();
        if($isInCart){
            $isInCart->update([
                "quantity"=>DB::raw("quantity+1")
            ]);
-           return redirect()->back()->with("success",$successMsg)->withFragment("product-section");
+           return response()->json([
+               "success" => $successMsg
+           ]);
        }
        ProductCart::create([
            "user_id" => auth()->user()->id,
            "product_id" => $request->productId,
            "quantity" => 1
        ]);
-       return redirect()->back()->with("success",$successMsg)->withFragment("product-section");
+       return response()->json([
+           "success"=>$successMsg
+       ]);
     }
     public function removeOne(Request $request){
         if(!$request->productId){
-            return redirect()->back()->with("error","product id is required")->withFragment("product-section");
+            return response()->json([
+                "success" => "bad request"
+            ]);
         }
         $product = Product::find($request->productId);
-        $successMsg = $product->name." is removed";
+        // $successMsg = $product->name." is removed";
         if(!$product){
-            return redirect()->back()->with("error","invalid product")->withFragment("product-section");
+            return response()->json([
+                "success"=>"bad request"
+            ]);
         }
+        $successMsg = $product->name." is removed";
         $isInCart = ProductCart::where("user_id",auth()->user()->id)->where("product_id",$request->productId)->first();
         if($isInCart && $isInCart->quantity>1){
             $isInCart->update([
                 "quantity"=>DB::raw("quantity-1")
             ]);
-            return redirect()->back()->with("success",$successMsg)->withFragment("product-section");
+            return response()->json([
+                "success"=>$successMsg
+            ]);
         }
         ProductCart::find($isInCart->id)->delete();
-        return redirect()->back()->with("success",$successMsg)->withFragment("product-section");
+        return response()->json([
+            "success"=>$successMsg
+        ]);
     }
 }

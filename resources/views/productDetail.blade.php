@@ -15,7 +15,7 @@
     <li class="nav-item">
         <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
         >Cart<span></span
-        ><span class="badge rounded-pill bg-danger">{{$cart_count}}</span></a
+        ><span class="badge rounded-pill bg-danger" id="cartCount">{{$cart_count}}</span></a
         >
     </li>
     <li class="nav-item">
@@ -71,7 +71,7 @@
                             </button>
                         </form> --}}
                         <span class="likeBtn fs-5 active-icon" data-product-id={{$product->id}} style="cursor: pointer">
-                            <span class="spinner-border text-danger fs-6 d-none"></span>
+                            <span class="spinner-border text-danger fs-6 d-none spinner-border-sm"></span>
                             @if ($isLiked)
                             <i class="fas fa-heart"></i></span>
                             @else
@@ -102,7 +102,7 @@
                         </button>
                       </form> --}}
                       <span class="favouriteBtn fs-5 active-icon" data-product-id={{$product->id}} style="cursor: pointer">
-                        <span class="spinner-border text-warning fs-6 d-none"></span>
+                        <span class="spinner-border text-warning fs-6 d-none spinner-border-sm"></span>
                         @if ($isFavourite)
                         <i class="fas fa-star"></i></span>
                         @else
@@ -130,13 +130,17 @@
                 <div class="mb-3">
                   <span class="fs-2 fw-bold mb-4">{{$product->price}}<sup>mmk</sup></span>
                   <div>
-                    <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
+                    {{-- <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                         @csrf
                         <input type="text" name="productId" value="{{$product->id}}" class="d-none" />
                         <button type="submit" class="btn btn-danger fs-5">
                             <i class="fas fa-cart-plus"></i>
                         </button>
-                    </form>
+                    </form> --}}
+                    <span class="btn btn-danger cartAddBtn" data-product-id="{{$product->id}}">
+                        <span class="spinner-border spinner-border-sm text-white d-none"></span>
+                        <span>Add to cart</span>
+                    </span>
                     <a href="{{url("/#product-section")}}" class="btn btn-outline-danger">see more</a>
                   </div>
                 </div>
@@ -279,6 +283,7 @@ const deleteBtns = document.getElementsByClassName("delete-cmt-btn");
 const commentWrappers = document.querySelectorAll(".comment-wrapper");
 const favouriteBtn = document.querySelector(".favouriteBtn");
 const likeBtn = document.querySelector(".likeBtn");
+const cartAddBtn = document.querySelector(".cartAddBtn");
 
 Array.prototype.forEach.call(deleteBtns,(deleteBtn)=>{
     deleteBtn.addEventListener("click",async(e)=>{
@@ -397,10 +402,10 @@ favouriteBtn.addEventListener("click",async(e)=>{
     starIcon.classList.add("d-none");
     const {data}= await axios.post("{{url("/toggleFavourite")}}",formData);
     spinner.classList.add("d-none");
-    if(data.success === "removed"){
+    if(data.success.slice(0,7) === "removed"){
         starIcon.classList = "far fa-star";
         e.target.nextElementSibling.innerHTML = "Add to favourites";
-    }else if(data.success === "added"){
+    }else if(data.success.slice(0,5) === "added"){
         starIcon.classList = "fas fa-star";
         e.target.nextElementSibling.innerHTML = "Favourites";
     }
@@ -417,7 +422,7 @@ favouriteBtn.addEventListener("click",async(e)=>{
     new Noty({
     type: "info",
     layout: "centerRight",
-    text     : data.success === "removed"? "removed from favourites":"added to favourites",
+    text     : data.success,
     timeout: 3000,
     killer: true,
     }).show();
@@ -435,10 +440,10 @@ likeBtn.addEventListener("click",async(e)=>{
     spinner.classList.add("d-none");
     const likeIndicator = e.target.nextElementSibling;
     const likeCount = Number(likeIndicator.innerHTML);
-    if(data.success === "unliked"){
+    if(data.success.slice(0,7) === "unliked"){
         likeIcon.classList = "far fa-heart";
         likeIndicator.innerHTML = String(likeCount-1);
-    }else if(data.success === "liked"){
+    }else if(data.success.slice(0,5) === "liked"){
         likeIcon.classList = "fas fa-heart";
         likeIndicator.innerHTML = String(likeCount+1);
     }
@@ -462,7 +467,47 @@ likeBtn.addEventListener("click",async(e)=>{
 
 });
 
-
+cartAddBtn.addEventListener("click",async(e)=>{
+    const spinner = e.target.children[0];
+    const btnText = e.target.children[1];
+    const formData = new FormData();
+    const cartCountText = Number(cartCount.innerHTML);
+    formData.append("productId",e.target.dataset.productId);
+    spinner.classList.remove("d-none");
+    btnText.classList.add("d-none");
+    e.target.classList.add("disabled");
+    const {data} = await axios.post("{{url("/cart/add")}}",formData);
+    if(data.success){
+        new Noty({
+        type: "info",
+        layout: "centerRight",
+        text     : data.success,
+        timeout: 3000,
+        killer: true,
+        }).show();
+        cartCount.innerHTML = String(cartCountText+1);
+        cartCount.classList.add("larger");
+        anime({
+        targets: ".larger",
+        scale: [2,1],
+        duration: 200
+        });
+        setTimeout(() => {
+            cartCount.classList.remove("larger");
+        }, 300);
+    }else{
+        new Noty({
+        type: "error",
+        layout: "centerRight",
+        text     : data.error,
+        timeout: 3000,
+        killer: true,
+        }).show();
+    }
+    spinner.classList.add("d-none");
+    btnText.classList.remove("d-none");
+    e.target.classList.remove("disabled");
+        });
 
 });
 

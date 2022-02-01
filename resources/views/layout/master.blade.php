@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg" href="{{url("/image/static/logo.svg")}}">
     <title>Savannah</title>
     {{-- <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
@@ -185,6 +186,9 @@
       .likeBtn>*{
           pointer-events: none;
       }
+      .cartAddBtn>*{
+          pointer-events: none;
+      }
     </style>
   </head>
   <body id="body">
@@ -209,7 +213,7 @@
 
     <!-- hero section -->
     <div class="container-fluid" id="hero">
-        <video id="hero-video" playsinline autoplay muted loop>
+        <video id="hero-video" playsinline autoplay muted loop poster="{{asset("/image/static/heroImg3.jpg")}}">
             <source src="{{asset("/image/static/hero-video.mp4")}}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -232,14 +236,14 @@
                     <!-- search bar -->
                     <form
                         action="{{url("/products"."#product-section")}}"
-                        class="w-100 flex-column flex-sm-row mb-2 d-none d-sm-flex"
+                        class="w-100 d-flex"
                         method="get"
                         id="search-box"
                     >
                         <input
                         type="text"
                         name="search"
-                        class="form-control me-sm-1 mb-2 mb-sm-0 px-3 py-2"
+                        class="form-control me-sm-1 me-1 me-sm-0 mb-0 px-3 py-2"
                         placeholder="Search product by name"
                         />
                         <div>

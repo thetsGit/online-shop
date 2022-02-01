@@ -11,6 +11,7 @@ use App\Models\ProductOrder;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -49,7 +50,9 @@ class PageController extends Controller
        ]);
        $file = $request->file("image");
        $file_name = uniqid().$file->getClientOriginalName();
-       Storage::disk("image")->put($file_name,file_get_contents($file));
+       $file->move(public_path("image"),$file_name);
+    //    $file_name = uniqid().$file->getClientOriginalName();
+    //    Storage::disk("image")->put($file_name,file_get_contents($file));
        User::create([
            "name"=>$request->name,
            "email"=>$request->email,
@@ -88,15 +91,18 @@ class PageController extends Controller
     }
 
     public function uploadProfileImage(Request $request){
-        $imageName = uniqid().$request->image->getClientOriginalName();
+        $image = $request->image;
+        $imageName = uniqid().$image->getClientOriginalName();
         $user = User::find(auth()->user()->id);
-        Storage::disk("image")->put($imageName,file_get_contents($request->image));
-        Storage::disk("image")->delete($user->image);
+        // Storage::disk("image")->put($imageName,file_get_contents($request->image));
+        // Storage::disk("image")->delete($user->image);
+        $image->move(public_path("image"),$imageName);
+        File::delete(public_path("/image/").$user->image);
         $user->update([
             "image"=>$imageName
         ]);
 
-      return asset("/image")."/".$imageName;
+      return asset("/image/".$imageName);
     }
     public function showFavourites(){
         $favourites = FavList::where("user_id",auth()->user()->id)->with("product.category","product.ageGroup")->paginate(12)->fragment("product-section");

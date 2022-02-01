@@ -137,6 +137,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $preProductName = $product->name;
+        Storage::disk("image")->delete($product->image);
         $product->delete();
         return redirect('/admin/products')->with('success',"$preProductName is deleted");
     }

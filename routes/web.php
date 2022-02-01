@@ -16,6 +16,9 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 */
 
+// Route::get("/get-path",function(){
+//     return public_path("image");
+// });
 
 // _____________________________________________user________________________________________________________
 Route::group(["middleware"=>"shareData"],function(){

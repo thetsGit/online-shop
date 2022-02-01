@@ -165,7 +165,7 @@
                       <a
                         class="nav-link active order-section"
                         id="home-tab"
-                        data-toggle="tab"
+                        data-bs-toggle="tab"
                         href="#pending"
                         >Pending</a
                       >
@@ -174,7 +174,7 @@
                       <a
                         class="nav-link order-section"
                         id="profile-tab"
-                        data-toggle="tab"
+                        data-bs-toggle="tab"
                         href="#completed"
                         >Completed</a
                       >

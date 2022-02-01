@@ -41,7 +41,7 @@ id="navbar"
           <li class="nav-item">
               <a class="nav-link nav-link-me position-relative" href="{{url("/cart")}}"
               >Cart<span></span
-              ><span class="badge rounded-pill bg-primary">{{$cart_count}}</span></a
+              ><span class="badge rounded-pill bg-primary" id="cart-count">{{$cart_count}}</span></a
               >
           </li>
           <li class="nav-item">
@@ -90,7 +90,7 @@ id="navbar"
                                 </button>
                             </form> --}}
                             <span class="text-danger fs-5 removeFavBtn action-icon d-inline-block" data-product-id="{{$favourite->product->id}}">
-                                <span class="spinner-border text-danger fs-6 d-none"></span>
+                                <span class="spinner-border text-danger fs-6 d-none spinner-border-sm"></span>
                                 <i class="fas fa-times-circle" style="pointer-events: none"></i>
                             </span>
                         </div>
@@ -110,13 +110,17 @@ id="navbar"
                             ><sup>mmk</sup><strong class="fs-5">{{$favourite->product->price}}</strong></span
                         >
                         </div>
-                        <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
+                        {{-- <form action="{{url("/cart/add")}}" method="POST" class="d-inline m-0 p-0">
                             @csrf
                             <input type="text" name="productId" value="{{$favourite->product->id}}" class="d-none" />
                             <button type="submit" class="btn btn-info btn-block m-0">
                                 Add to cart
                             </button>
-                        </form>
+                        </form> --}}
+                        <span class="btn btn-info btn-block m-0 cartAddBtn" data-product-id="{{$favourite->product->id}}">
+                            <span class="spinner-border spinner-border-sm text-white d-none"></span>
+                            <span>Add to cart</span>
+                        </span>
                     </div>
                     </div>
                 </div>
@@ -143,7 +147,7 @@ removeFavBtns.forEach(removeFavBtn => {
         crossIcon.classList.add("d-none");
         const {data}= await axios.post("{{url("/toggleFavourite")}}",formData);
         spinner.classList.add("d-none");
-        if(data.success === "removed"){
+        if(data.success.slice(0,7) === "removed"){
             $(e.target).parent().parent().parent().parent().addClass("removed");
         }
         else{
@@ -180,5 +184,6 @@ removeFavBtns.forEach(removeFavBtn => {
 
 </script>
 @include('layout.heroAni')
+@include('layout.cartAddScript')
 @endsection
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg" href="{{url("/image/static/logo.svg")}}">
     <title>Savannah</title>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.css"
@@ -166,6 +167,12 @@
           pointer-events: none;
       }
       .likeBtn>*{
+          pointer-events: none;
+      }
+      .cartAddBtn>*{
+          pointer-events: none;
+      }
+      .cartRemoveBtn>*{
           pointer-events: none;
       }
     </style>
