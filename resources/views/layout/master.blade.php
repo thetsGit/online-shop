@@ -189,6 +189,9 @@
       .cartAddBtn>*{
           pointer-events: none;
       }
+      #search-box input::placeholder{
+        color: #0003;
+      }
     </style>
   </head>
   <body id="body">
